@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WeCare.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using WeCare.Infrastructure.Persistence;
 namespace WeCare.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230409201008_ModifyCourses")]
+    partial class ModifyCourses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -398,11 +401,16 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
 
                     b.HasIndex("UserId");
 
@@ -744,21 +752,6 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("WeCare.Domain.Entities.StudentCourse", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("StudentId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("StudentCourses");
-                });
-
             modelBuilder.Entity("WeCare.Domain.Entities.DisabilityStudent", b =>
                 {
                     b.HasBaseType("WeCare.Domain.Entities.Student");
@@ -829,6 +822,10 @@ namespace WeCare.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("WeCare.Domain.Entities.Course", b =>
                 {
+                    b.HasOne("WeCare.Domain.Entities.Student", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("StudentId");
+
                     b.HasOne("WeCare.Domain.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -961,30 +958,9 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WeCare.Domain.Entities.StudentCourse", b =>
-                {
-                    b.HasOne("WeCare.Domain.Entities.Course", "Course")
-                        .WithMany("Students")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WeCare.Domain.Entities.Student", "Student")
-                        .WithMany("Courses")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("WeCare.Domain.Entities.Course", b =>
                 {
                     b.Navigation("Materials");
-
-                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("WeCare.Domain.Entities.Major", b =>

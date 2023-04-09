@@ -30,6 +30,15 @@ public static class ConfigureServices
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
+        services.AddCustomIdentityOptions(o =>
+        {
+            o.RequiredActiveAccount = true;
+            o.SignIn = new SignInOptions
+            {
+                RequireConfirmedEmail = true
+            };
+        });
+
         services.AddIdentityServer()
             .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
@@ -41,7 +50,7 @@ public static class ConfigureServices
             .AddIdentityServerJwt();
 
         services.AddAuthorization(options =>
-            options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
+                options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
 
         return services;
     }

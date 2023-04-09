@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using WeCare.Application.Common.Interfaces;
 
 namespace WeCare.Application.TodoLists.Queries.ExportTodos;

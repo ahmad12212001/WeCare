@@ -31,6 +31,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<RequestVolunteer> RequestVolunteers => Set<RequestVolunteer>();
 
     public DbSet<Student> Students => Set<Student>();
+    public DbSet<StudentCourse> StudentCourses => Set<StudentCourse>();
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
@@ -43,7 +44,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
-   
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -60,7 +61,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _mediator.DispatchDomainEvents(this);
-
         return await base.SaveChangesAsync(cancellationToken);
+
     }
 }

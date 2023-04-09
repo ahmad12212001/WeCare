@@ -6,5 +6,5 @@ public class Student : BaseAuditableEntity
     public string UserId { get; set; } = null!;
     public Major Major { get; set; } = null!;
     public ApplicationUser User { get; set; } = null!;
-    public ICollection<Course>? Courses { get; set; }
+    public ICollection<StudentCourse>? Courses { get; set; }
 }
