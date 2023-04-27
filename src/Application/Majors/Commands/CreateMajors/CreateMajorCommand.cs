@@ -3,7 +3,7 @@ using WeCare.Application.Common.Interfaces;
 using WeCare.Application.Common.Security;
 using WeCare.Domain.Entities;
 
-namespace WeCare.Application.Majors.Commands.CreateMajor;
+namespace WeCare.Application.Majors.Commands.CreateMajors;
 
 [Authorize(Roles = "DeanOffice")]
 public record CreateMajorCommand : IRequest<int>

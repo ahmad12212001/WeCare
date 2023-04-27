@@ -7,4 +7,6 @@ public class Course : BaseAuditableEntity
     public ApplicationUser User { get; set; } = null!;
     public ICollection<Material>? Materials { get; set; }
     public ICollection<StudentCourse>? Students { get; set; }
+    
+    public ICollection<Exam>? Exams { get; set; }
 }

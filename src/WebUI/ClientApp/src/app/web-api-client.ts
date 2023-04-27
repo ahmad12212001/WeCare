@@ -16,8 +16,10 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface ICoursesClient {
-    createPOST(command: CreateCourseCommand): Observable<number>;
-    createPUT(command: UpdateCourseCommand): Observable<CourseDto>;
+    get(name: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfCourseDto>;
+    create(command: CreateCourseCommand): Observable<number>;
+    update(command: UpdateCourseCommand): Observable<CourseDto>;
+    getcourse(id: number): Observable<CourseDto>;
     delete(id: number): Observable<string>;
 }
 
@@ -34,7 +36,65 @@ export class CoursesClient implements ICoursesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    createPOST(command: CreateCourseCommand): Observable<number> {
+    get(name: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfCourseDto> {
+        let url_ = this.baseUrl + "/api/Courses?";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedListOfCourseDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedListOfCourseDto>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<PaginatedListOfCourseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfCourseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateCourseCommand): Observable<number> {
         let url_ = this.baseUrl + "/api/Courses";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -51,11 +111,11 @@ export class CoursesClient implements ICoursesClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreatePOST(response_);
+            return this.processCreate(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreatePOST(response_ as any);
+                    return this.processCreate(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<number>;
                 }
@@ -64,7 +124,7 @@ export class CoursesClient implements ICoursesClient {
         }));
     }
 
-    protected processCreatePOST(response: HttpResponseBase): Observable<number> {
+    protected processCreate(response: HttpResponseBase): Observable<number> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -87,7 +147,7 @@ export class CoursesClient implements ICoursesClient {
         return _observableOf(null as any);
     }
 
-    createPUT(command: UpdateCourseCommand): Observable<CourseDto> {
+    update(command: UpdateCourseCommand): Observable<CourseDto> {
         let url_ = this.baseUrl + "/api/Courses";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -104,11 +164,11 @@ export class CoursesClient implements ICoursesClient {
         };
 
         return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreatePUT(response_);
+            return this.processUpdate(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreatePUT(response_ as any);
+                    return this.processUpdate(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<CourseDto>;
                 }
@@ -117,7 +177,58 @@ export class CoursesClient implements ICoursesClient {
         }));
     }
 
-    protected processCreatePUT(response: HttpResponseBase): Observable<CourseDto> {
+    protected processUpdate(response: HttpResponseBase): Observable<CourseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getcourse(id: number): Observable<CourseDto> {
+        let url_ = this.baseUrl + "/api/Courses/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetcourse(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetcourse(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CourseDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CourseDto>;
+        }));
+    }
+
+    protected processGetcourse(response: HttpResponseBase): Observable<CourseDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -195,6 +306,7 @@ export class CoursesClient implements ICoursesClient {
 export interface IMajorsClient {
     get(name: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfMajorDto>;
     createMajor(createMajorCommand: CreateMajorCommand): Observable<number>;
+    update(command: UpdateMajorsCommand): Observable<MajorDto>;
     getMajor(id: number): Observable<MajorDto>;
 }
 
@@ -312,6 +424,58 @@ export class MajorsClient implements IMajorsClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(command: UpdateMajorsCommand): Observable<MajorDto> {
+        let url_ = this.baseUrl + "/api/Majors";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MajorDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MajorDto>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<MajorDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = MajorDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1048,10 +1212,86 @@ export class WeatherForecastClient implements IWeatherForecastClient {
     }
 }
 
-export class CreateCourseCommand implements ICreateCourseCommand {
-    name?: string;
+export interface IRequestsClient {
+    create(createRequestCommand: CreateRequestCommand): Observable<number>;
+}
 
-    constructor(data?: ICreateCourseCommand) {
+@Injectable({
+    providedIn: 'root'
+})
+export class RequestsClient implements IRequestsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    create(createRequestCommand: CreateRequestCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Requests";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(createRequestCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export class PaginatedListOfCourseDto implements IPaginatedListOfCourseDto {
+    items?: CourseDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfCourseDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1062,26 +1302,49 @@ export class CreateCourseCommand implements ICreateCourseCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.name = _data["name"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(CourseDto.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
         }
     }
 
-    static fromJS(data: any): CreateCourseCommand {
+    static fromJS(data: any): PaginatedListOfCourseDto {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateCourseCommand();
+        let result = new PaginatedListOfCourseDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
         return data;
     }
 }
 
-export interface ICreateCourseCommand {
-    name?: string;
+export interface IPaginatedListOfCourseDto {
+    items?: CourseDto[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
 }
 
 export class CourseDto implements ICourseDto {
@@ -1121,6 +1384,42 @@ export class CourseDto implements ICourseDto {
 
 export interface ICourseDto {
     id?: number;
+    name?: string;
+}
+
+export class CreateCourseCommand implements ICreateCourseCommand {
+    name?: string;
+
+    constructor(data?: ICreateCourseCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateCourseCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCourseCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ICreateCourseCommand {
     name?: string;
 }
 
@@ -1302,6 +1601,46 @@ export class CreateMajorCommand implements ICreateMajorCommand {
 
 export interface ICreateMajorCommand {
     name?: string;
+}
+
+export class UpdateMajorsCommand implements IUpdateMajorsCommand {
+    majorId?: number;
+    majorName?: string;
+
+    constructor(data?: IUpdateMajorsCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.majorId = _data["majorId"];
+            this.majorName = _data["majorName"];
+        }
+    }
+
+    static fromJS(data: any): UpdateMajorsCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateMajorsCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["majorId"] = this.majorId;
+        data["majorName"] = this.majorName;
+        return data;
+    }
+}
+
+export interface IUpdateMajorsCommand {
+    majorId?: number;
+    majorName?: string;
 }
 
 export class PaginatedListOfTodoItemBriefDto implements IPaginatedListOfTodoItemBriefDto {
@@ -1885,6 +2224,60 @@ export interface IWeatherForecast {
     temperatureC?: number;
     temperatureF?: number;
     summary?: string | undefined;
+}
+
+export class CreateRequestCommand implements ICreateRequestCommand {
+    dueDate?: Date;
+    requestType?: RequestType;
+    examId?: number | undefined;
+    courseId?: number;
+
+    constructor(data?: ICreateRequestCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
+            this.requestType = _data["requestType"];
+            this.examId = _data["examId"];
+            this.courseId = _data["courseId"];
+        }
+    }
+
+    static fromJS(data: any): CreateRequestCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRequestCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
+        data["requestType"] = this.requestType;
+        data["examId"] = this.examId;
+        data["courseId"] = this.courseId;
+        return data;
+    }
+}
+
+export interface ICreateRequestCommand {
+    dueDate?: Date;
+    requestType?: RequestType;
+    examId?: number | undefined;
+    courseId?: number;
+}
+
+export enum RequestType {
+    Assistance = 0,
+    Material = 1,
+    Assignment = 2,
 }
 
 export interface FileResponse {

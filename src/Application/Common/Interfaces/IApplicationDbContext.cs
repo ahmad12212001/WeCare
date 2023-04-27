@@ -13,6 +13,8 @@ public interface IApplicationDbContext
     DbSet<RequestFeedBack> RequestFeedBacks { get; }
     DbSet<RequestVolunteer> RequestVolunteers { get; }
     DbSet<Student> Students { get; }
+    DbSet<DisabilityStudent> DisabilityStudents { get; }
+    DbSet<VolunteerStudent> VolunteerStudents { get; }
     DbSet<StudentCourse> StudentCourses { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

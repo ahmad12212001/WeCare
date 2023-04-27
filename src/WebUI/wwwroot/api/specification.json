@@ -7,11 +7,58 @@
   },
   "paths": {
     "/api/Courses": {
+      "get": {
+        "tags": [
+          "Courses"
+        ],
+        "operationId": "Courses_Get",
+        "parameters": [
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfCourseDto"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Courses"
         ],
-        "operationId": "Courses_CreatePOST",
+        "operationId": "Courses_Create",
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -42,7 +89,7 @@
         "tags": [
           "Courses"
         ],
-        "operationId": "Courses_CreatePUT",
+        "operationId": "Courses_Update",
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -70,6 +117,36 @@
       }
     },
     "/api/Courses/{id}": {
+      "get": {
+        "tags": [
+          "Courses"
+        ],
+        "operationId": "Courses_Getcourse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseDto"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "tags": [
           "Courses"
@@ -174,6 +251,36 @@
                 "schema": {
                   "type": "integer",
                   "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Majors"
+        ],
+        "operationId": "Majors_Update",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMajorsCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MajorDto"
                 }
               }
             }
@@ -643,16 +750,70 @@
           }
         }
       }
+    },
+    "/api/Requests": {
+      "post": {
+        "tags": [
+          "Requests"
+        ],
+        "operationId": "Requests_Create",
+        "requestBody": {
+          "x-name": "createRequestCommand",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "CreateCourseCommand": {
+      "PaginatedListOfCourseDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "name": {
-            "type": "string"
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CourseDto"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
           }
         }
       },
@@ -664,6 +825,15 @@
             "type": "integer",
             "format": "int32"
           },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateCourseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
           "name": {
             "type": "string"
           }
@@ -730,6 +900,19 @@
         "additionalProperties": false,
         "properties": {
           "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateMajorsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "majorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "majorName": {
             "type": "string"
           }
         }
@@ -983,6 +1166,42 @@
             "nullable": true
           }
         }
+      },
+      "CreateRequestCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requestType": {
+            "$ref": "#/components/schemas/RequestType"
+          },
+          "examId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RequestType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Assistance",
+          "Material",
+          "Assignment"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
       }
     },
     "securitySchemes": {

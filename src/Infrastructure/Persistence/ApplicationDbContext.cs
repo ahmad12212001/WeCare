@@ -31,6 +31,8 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<RequestVolunteer> RequestVolunteers => Set<RequestVolunteer>();
 
     public DbSet<Student> Students => Set<Student>();
+    public DbSet<DisabilityStudent> DisabilityStudents => Set<DisabilityStudent>();
+    public DbSet<VolunteerStudent> VolunteerStudents => Set<VolunteerStudent>();
     public DbSet<StudentCourse> StudentCourses => Set<StudentCourse>();
 
     public ApplicationDbContext(

@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeCare.Application.Common.Models;
-using WeCare.Application.Majors.Commands.CreateMajor;
+using WeCare.Application.Majors.Commands.CreateMajors;
+using WeCare.Application.Majors.Commands.UpdateMajors;
 using WeCare.Application.Majors.Dtos;
 using WeCare.Application.Majors.Queries.GetMajor;
-using WeCare.Application.TodoLists.Queries.ExportTodos;
-using WeCare.Application.TodoLists.Queries.GetTodos;
 
 namespace WeCare.WebUI.Controllers;
 
@@ -28,4 +27,10 @@ public class MajorsController : ApiControllerBase
     {
         return await Mediator.Send(createMajorCommand);
     }
+    [HttpPut]
+    public async Task<ActionResult<MajorDto>> Update(UpdateMajorsCommand command)
+    {
+        return await Mediator.Send(command);
+    }
+
 }
