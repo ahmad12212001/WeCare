@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WeCare.Infrastructure;
 using WeCare.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);

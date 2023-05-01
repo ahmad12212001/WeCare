@@ -303,11 +303,243 @@ export class CoursesClient implements ICoursesClient {
     }
 }
 
+export interface IExamClient {
+    getExam(name: string | null | undefined, id: string): Observable<ExamDto>;
+    delete(id: number): Observable<number>;
+    createExam(createExamCommand: CreateExamsCommand): Observable<number>;
+    update(command: UpdateExamCommand): Observable<ExamDto>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ExamClient implements IExamClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getExam(name: string | null | undefined, id: string): Observable<ExamDto> {
+        let url_ = this.baseUrl + "/api/Exam/{id}?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (name !== undefined && name !== null)
+            url_ += "name=" + encodeURIComponent("" + name) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetExam(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetExam(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ExamDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ExamDto>;
+        }));
+    }
+
+    protected processGetExam(response: HttpResponseBase): Observable<ExamDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ExamDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    delete(id: number): Observable<number> {
+        let url_ = this.baseUrl + "/api/Exam/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    createExam(createExamCommand: CreateExamsCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Exam";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(createExamCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateExam(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateExam(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreateExam(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(command: UpdateExamCommand): Observable<ExamDto> {
+        let url_ = this.baseUrl + "/api/Exam";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ExamDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ExamDto>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<ExamDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ExamDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IMajorsClient {
     get(name: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfMajorDto>;
     createMajor(createMajorCommand: CreateMajorCommand): Observable<number>;
     update(command: UpdateMajorsCommand): Observable<MajorDto>;
     getMajor(id: number): Observable<MajorDto>;
+    delete(id: number): Observable<string>;
 }
 
 @Injectable({
@@ -527,6 +759,181 @@ export class MajorsClient implements IMajorsClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = MajorDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    delete(id: number): Observable<string> {
+        let url_ = this.baseUrl + "/api/Majors/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IStudentClient {
+    getStudent(id: string | null): Observable<StudentsDto>;
+    create(command: CreateStudentCommand): Observable<number>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class StudentClient implements IStudentClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getStudent(id: string | null): Observable<StudentsDto> {
+        let url_ = this.baseUrl + "/api/Student/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStudent(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStudent(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StudentsDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StudentsDto>;
+        }));
+    }
+
+    protected processGetStudent(response: HttpResponseBase): Observable<StudentsDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StudentsDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateStudentCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Student";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1463,6 +1870,146 @@ export interface IUpdateCourseCommand {
     name?: string;
 }
 
+export class ExamDto implements IExamDto {
+    date?: Date;
+    hallNu?: string;
+    loc?: string;
+
+    constructor(data?: IExamDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.hallNu = _data["hallNu"];
+            this.loc = _data["loc"];
+        }
+    }
+
+    static fromJS(data: any): ExamDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ExamDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["hallNu"] = this.hallNu;
+        data["loc"] = this.loc;
+        return data;
+    }
+}
+
+export interface IExamDto {
+    date?: Date;
+    hallNu?: string;
+    loc?: string;
+}
+
+export class CreateExamsCommand implements ICreateExamsCommand {
+    dueDate?: Date;
+    hallNo?: string;
+    location?: string;
+    courseId?: number;
+
+    constructor(data?: ICreateExamsCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
+            this.hallNo = _data["hallNo"];
+            this.location = _data["location"];
+            this.courseId = _data["courseId"];
+        }
+    }
+
+    static fromJS(data: any): CreateExamsCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateExamsCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
+        data["hallNo"] = this.hallNo;
+        data["location"] = this.location;
+        data["courseId"] = this.courseId;
+        return data;
+    }
+}
+
+export interface ICreateExamsCommand {
+    dueDate?: Date;
+    hallNo?: string;
+    location?: string;
+    courseId?: number;
+}
+
+export class UpdateExamCommand implements IUpdateExamCommand {
+    name?: string;
+    newDueDate?: Date;
+    hallno?: string;
+    location?: string;
+
+    constructor(data?: IUpdateExamCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.newDueDate = _data["newDueDate"] ? new Date(_data["newDueDate"].toString()) : <any>undefined;
+            this.hallno = _data["hallno"];
+            this.location = _data["location"];
+        }
+    }
+
+    static fromJS(data: any): UpdateExamCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateExamCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["newDueDate"] = this.newDueDate ? this.newDueDate.toISOString() : <any>undefined;
+        data["hallno"] = this.hallno;
+        data["location"] = this.location;
+        return data;
+    }
+}
+
+export interface IUpdateExamCommand {
+    name?: string;
+    newDueDate?: Date;
+    hallno?: string;
+    location?: string;
+}
+
 export class PaginatedListOfMajorDto implements IPaginatedListOfMajorDto {
     items?: MajorDto[];
     pageNumber?: number;
@@ -1641,6 +2188,794 @@ export class UpdateMajorsCommand implements IUpdateMajorsCommand {
 export interface IUpdateMajorsCommand {
     majorId?: number;
     majorName?: string;
+}
+
+export class StudentsDto implements IStudentsDto {
+    studentId?: string;
+    userId?: string;
+    major?: Major;
+    user?: ApplicationUser;
+
+    constructor(data?: IStudentsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.studentId = _data["studentId"];
+            this.userId = _data["userId"];
+            this.major = _data["major"] ? Major.fromJS(_data["major"]) : <any>undefined;
+            this.user = _data["user"] ? ApplicationUser.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): StudentsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["studentId"] = this.studentId;
+        data["userId"] = this.userId;
+        data["major"] = this.major ? this.major.toJSON() : <any>undefined;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IStudentsDto {
+    studentId?: string;
+    userId?: string;
+    major?: Major;
+    user?: ApplicationUser;
+}
+
+export abstract class BaseEntity implements IBaseEntity {
+    id?: number;
+    domainEvents?: BaseEvent[];
+
+    constructor(data?: IBaseEntity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            if (Array.isArray(_data["domainEvents"])) {
+                this.domainEvents = [] as any;
+                for (let item of _data["domainEvents"])
+                    this.domainEvents!.push(BaseEvent.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): BaseEntity {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'BaseEntity' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        if (Array.isArray(this.domainEvents)) {
+            data["domainEvents"] = [];
+            for (let item of this.domainEvents)
+                data["domainEvents"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IBaseEntity {
+    id?: number;
+    domainEvents?: BaseEvent[];
+}
+
+export abstract class BaseAuditableEntity extends BaseEntity implements IBaseAuditableEntity {
+    created?: Date;
+    createdBy?: string | undefined;
+    lastModified?: Date | undefined;
+    lastModifiedBy?: string | undefined;
+
+    constructor(data?: IBaseAuditableEntity) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
+            this.lastModifiedBy = _data["lastModifiedBy"];
+        }
+    }
+
+    static override fromJS(data: any): BaseAuditableEntity {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'BaseAuditableEntity' cannot be instantiated.");
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
+        data["lastModifiedBy"] = this.lastModifiedBy;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IBaseAuditableEntity extends IBaseEntity {
+    created?: Date;
+    createdBy?: string | undefined;
+    lastModified?: Date | undefined;
+    lastModifiedBy?: string | undefined;
+}
+
+export class Major extends BaseAuditableEntity implements IMajor {
+    name?: string;
+    students?: Student[] | undefined;
+
+    constructor(data?: IMajor) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            if (Array.isArray(_data["students"])) {
+                this.students = [] as any;
+                for (let item of _data["students"])
+                    this.students!.push(Student.fromJS(item));
+            }
+        }
+    }
+
+    static override fromJS(data: any): Major {
+        data = typeof data === 'object' ? data : {};
+        let result = new Major();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        if (Array.isArray(this.students)) {
+            data["students"] = [];
+            for (let item of this.students)
+                data["students"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IMajor extends IBaseAuditableEntity {
+    name?: string;
+    students?: Student[] | undefined;
+}
+
+export class Student extends BaseAuditableEntity implements IStudent {
+    studentId?: string;
+    majorId?: number;
+    userId?: string;
+    major?: Major;
+    user?: ApplicationUser;
+    courses?: StudentCourse[] | undefined;
+
+    constructor(data?: IStudent) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.studentId = _data["studentId"];
+            this.majorId = _data["majorId"];
+            this.userId = _data["userId"];
+            this.major = _data["major"] ? Major.fromJS(_data["major"]) : <any>undefined;
+            this.user = _data["user"] ? ApplicationUser.fromJS(_data["user"]) : <any>undefined;
+            if (Array.isArray(_data["courses"])) {
+                this.courses = [] as any;
+                for (let item of _data["courses"])
+                    this.courses!.push(StudentCourse.fromJS(item));
+            }
+        }
+    }
+
+    static override fromJS(data: any): Student {
+        data = typeof data === 'object' ? data : {};
+        let result = new Student();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["studentId"] = this.studentId;
+        data["majorId"] = this.majorId;
+        data["userId"] = this.userId;
+        data["major"] = this.major ? this.major.toJSON() : <any>undefined;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        if (Array.isArray(this.courses)) {
+            data["courses"] = [];
+            for (let item of this.courses)
+                data["courses"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IStudent extends IBaseAuditableEntity {
+    studentId?: string;
+    majorId?: number;
+    userId?: string;
+    major?: Major;
+    user?: ApplicationUser;
+    courses?: StudentCourse[] | undefined;
+}
+
+export class IdentityUserOfString implements IIdentityUserOfString {
+    id?: string;
+    userName?: string | undefined;
+    normalizedUserName?: string | undefined;
+    email?: string | undefined;
+    normalizedEmail?: string | undefined;
+    emailConfirmed?: boolean;
+    passwordHash?: string | undefined;
+    securityStamp?: string | undefined;
+    concurrencyStamp?: string | undefined;
+    phoneNumber?: string | undefined;
+    phoneNumberConfirmed?: boolean;
+    twoFactorEnabled?: boolean;
+    lockoutEnd?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+
+    constructor(data?: IIdentityUserOfString) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userName = _data["userName"];
+            this.normalizedUserName = _data["normalizedUserName"];
+            this.email = _data["email"];
+            this.normalizedEmail = _data["normalizedEmail"];
+            this.emailConfirmed = _data["emailConfirmed"];
+            this.passwordHash = _data["passwordHash"];
+            this.securityStamp = _data["securityStamp"];
+            this.concurrencyStamp = _data["concurrencyStamp"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.phoneNumberConfirmed = _data["phoneNumberConfirmed"];
+            this.twoFactorEnabled = _data["twoFactorEnabled"];
+            this.lockoutEnd = _data["lockoutEnd"] ? new Date(_data["lockoutEnd"].toString()) : <any>undefined;
+            this.lockoutEnabled = _data["lockoutEnabled"];
+            this.accessFailedCount = _data["accessFailedCount"];
+        }
+    }
+
+    static fromJS(data: any): IdentityUserOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new IdentityUserOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userName"] = this.userName;
+        data["normalizedUserName"] = this.normalizedUserName;
+        data["email"] = this.email;
+        data["normalizedEmail"] = this.normalizedEmail;
+        data["emailConfirmed"] = this.emailConfirmed;
+        data["passwordHash"] = this.passwordHash;
+        data["securityStamp"] = this.securityStamp;
+        data["concurrencyStamp"] = this.concurrencyStamp;
+        data["phoneNumber"] = this.phoneNumber;
+        data["phoneNumberConfirmed"] = this.phoneNumberConfirmed;
+        data["twoFactorEnabled"] = this.twoFactorEnabled;
+        data["lockoutEnd"] = this.lockoutEnd ? this.lockoutEnd.toISOString() : <any>undefined;
+        data["lockoutEnabled"] = this.lockoutEnabled;
+        data["accessFailedCount"] = this.accessFailedCount;
+        return data;
+    }
+}
+
+export interface IIdentityUserOfString {
+    id?: string;
+    userName?: string | undefined;
+    normalizedUserName?: string | undefined;
+    email?: string | undefined;
+    normalizedEmail?: string | undefined;
+    emailConfirmed?: boolean;
+    passwordHash?: string | undefined;
+    securityStamp?: string | undefined;
+    concurrencyStamp?: string | undefined;
+    phoneNumber?: string | undefined;
+    phoneNumberConfirmed?: boolean;
+    twoFactorEnabled?: boolean;
+    lockoutEnd?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+}
+
+export class IdentityUser extends IdentityUserOfString implements IIdentityUser {
+
+    constructor(data?: IIdentityUser) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+    }
+
+    static override fromJS(data: any): IdentityUser {
+        data = typeof data === 'object' ? data : {};
+        let result = new IdentityUser();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IIdentityUser extends IIdentityUserOfString {
+}
+
+export class ApplicationUser extends IdentityUser implements IApplicationUser {
+    firstName?: string;
+    lastName?: string;
+    isActive?: boolean;
+
+    constructor(data?: IApplicationUser) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static override fromJS(data: any): ApplicationUser {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApplicationUser();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["isActive"] = this.isActive;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IApplicationUser extends IIdentityUser {
+    firstName?: string;
+    lastName?: string;
+    isActive?: boolean;
+}
+
+export class StudentCourse implements IStudentCourse {
+    studentId?: number;
+    courseId?: number;
+    student?: Student;
+    course?: Course;
+
+    constructor(data?: IStudentCourse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.studentId = _data["studentId"];
+            this.courseId = _data["courseId"];
+            this.student = _data["student"] ? Student.fromJS(_data["student"]) : <any>undefined;
+            this.course = _data["course"] ? Course.fromJS(_data["course"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): StudentCourse {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentCourse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["studentId"] = this.studentId;
+        data["courseId"] = this.courseId;
+        data["student"] = this.student ? this.student.toJSON() : <any>undefined;
+        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IStudentCourse {
+    studentId?: number;
+    courseId?: number;
+    student?: Student;
+    course?: Course;
+}
+
+export class Course extends BaseAuditableEntity implements ICourse {
+    name?: string;
+    userId?: string;
+    user?: ApplicationUser;
+    materials?: Material[] | undefined;
+    students?: StudentCourse[] | undefined;
+    exams?: Exam[] | undefined;
+
+    constructor(data?: ICourse) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? ApplicationUser.fromJS(_data["user"]) : <any>undefined;
+            if (Array.isArray(_data["materials"])) {
+                this.materials = [] as any;
+                for (let item of _data["materials"])
+                    this.materials!.push(Material.fromJS(item));
+            }
+            if (Array.isArray(_data["students"])) {
+                this.students = [] as any;
+                for (let item of _data["students"])
+                    this.students!.push(StudentCourse.fromJS(item));
+            }
+            if (Array.isArray(_data["exams"])) {
+                this.exams = [] as any;
+                for (let item of _data["exams"])
+                    this.exams!.push(Exam.fromJS(item));
+            }
+        }
+    }
+
+    static override fromJS(data: any): Course {
+        data = typeof data === 'object' ? data : {};
+        let result = new Course();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        if (Array.isArray(this.materials)) {
+            data["materials"] = [];
+            for (let item of this.materials)
+                data["materials"].push(item.toJSON());
+        }
+        if (Array.isArray(this.students)) {
+            data["students"] = [];
+            for (let item of this.students)
+                data["students"].push(item.toJSON());
+        }
+        if (Array.isArray(this.exams)) {
+            data["exams"] = [];
+            for (let item of this.exams)
+                data["exams"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface ICourse extends IBaseAuditableEntity {
+    name?: string;
+    userId?: string;
+    user?: ApplicationUser;
+    materials?: Material[] | undefined;
+    students?: StudentCourse[] | undefined;
+    exams?: Exam[] | undefined;
+}
+
+export class Material extends BaseAuditableEntity implements IMaterial {
+    name?: string;
+    description?: string;
+    courseId?: number;
+    course?: Course;
+    documents?: Document[];
+
+    constructor(data?: IMaterial) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.courseId = _data["courseId"];
+            this.course = _data["course"] ? Course.fromJS(_data["course"]) : <any>undefined;
+            if (Array.isArray(_data["documents"])) {
+                this.documents = [] as any;
+                for (let item of _data["documents"])
+                    this.documents!.push(Document.fromJS(item));
+            }
+        }
+    }
+
+    static override fromJS(data: any): Material {
+        data = typeof data === 'object' ? data : {};
+        let result = new Material();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["courseId"] = this.courseId;
+        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        if (Array.isArray(this.documents)) {
+            data["documents"] = [];
+            for (let item of this.documents)
+                data["documents"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IMaterial extends IBaseAuditableEntity {
+    name?: string;
+    description?: string;
+    courseId?: number;
+    course?: Course;
+    documents?: Document[];
+}
+
+export class Document extends BaseAuditableEntity implements IDocument {
+    name?: string;
+    documentType?: DocumentType;
+    path?: string;
+    materiald?: number;
+    material?: Material;
+
+    constructor(data?: IDocument) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.documentType = _data["documentType"];
+            this.path = _data["path"];
+            this.materiald = _data["materiald"];
+            this.material = _data["material"] ? Material.fromJS(_data["material"]) : <any>undefined;
+        }
+    }
+
+    static override fromJS(data: any): Document {
+        data = typeof data === 'object' ? data : {};
+        let result = new Document();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["documentType"] = this.documentType;
+        data["path"] = this.path;
+        data["materiald"] = this.materiald;
+        data["material"] = this.material ? this.material.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IDocument extends IBaseAuditableEntity {
+    name?: string;
+    documentType?: DocumentType;
+    path?: string;
+    materiald?: number;
+    material?: Material;
+}
+
+export enum DocumentType {
+    Pdf = 0,
+    Video = 1,
+    Image = 2,
+    Word = 4,
+    Excel = 8,
+}
+
+export abstract class BaseEvent implements IBaseEvent {
+
+    constructor(data?: IBaseEvent) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): BaseEvent {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'BaseEvent' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IBaseEvent {
+}
+
+export class Exam extends BaseAuditableEntity implements IExam {
+    name?: string;
+    dueDate?: Date;
+    hallNo?: string;
+    location?: string | undefined;
+    courseId?: number;
+    course?: Course;
+
+    constructor(data?: IExam) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
+            this.hallNo = _data["hallNo"];
+            this.location = _data["location"];
+            this.courseId = _data["courseId"];
+            this.course = _data["course"] ? Course.fromJS(_data["course"]) : <any>undefined;
+        }
+    }
+
+    static override fromJS(data: any): Exam {
+        data = typeof data === 'object' ? data : {};
+        let result = new Exam();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
+        data["hallNo"] = this.hallNo;
+        data["location"] = this.location;
+        data["courseId"] = this.courseId;
+        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IExam extends IBaseAuditableEntity {
+    name?: string;
+    dueDate?: Date;
+    hallNo?: string;
+    location?: string | undefined;
+    courseId?: number;
+    course?: Course;
+}
+
+export class CreateStudentCommand implements ICreateStudentCommand {
+    id?: string;
+    major?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phoneNumber?: string;
+    type?: StudentType;
+
+    constructor(data?: ICreateStudentCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.major = _data["major"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.email = _data["email"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.type = _data["type"];
+        }
+    }
+
+    static fromJS(data: any): CreateStudentCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateStudentCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["major"] = this.major;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["email"] = this.email;
+        data["phoneNumber"] = this.phoneNumber;
+        data["type"] = this.type;
+        return data;
+    }
+}
+
+export interface ICreateStudentCommand {
+    id?: string;
+    major?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phoneNumber?: string;
+    type?: StudentType;
+}
+
+export enum StudentType {
+    DisabilityStudent = 0,
+    VolunteerStudent = 1,
 }
 
 export class PaginatedListOfTodoItemBriefDto implements IPaginatedListOfTodoItemBriefDto {

@@ -16,23 +16,23 @@ public class  UpdateExamValidatior : AbstractValidator<UpdateExamCommand>
 
     public UpdateExamValidatior(IApplicationDbContext applicationDbContext) {
         _context = applicationDbContext;
-        RuleFor(v => v.OldDueDate).Must(IsExamExists).NotEmpty().NotNull();
+        RuleFor(v => v.Name).Must(IsExamExists).NotEmpty().NotNull();
         RuleFor(v => v.Location).NotEmpty().NotNull();
         RuleFor(v => v.Hallno).NotEmpty().NotNull();
-        RuleFor(v => v).Must(v => IsExamNewNameNotExist(v.OldDueDate))
+        RuleFor(v => v).Must(v => IsExamNewNameNotExist(v.Name))
           .NotEmpty().NotNull();
 
 
     }
-    private bool IsExamExists(DateTime date)
+    private bool IsExamExists(string name)
     {
-        return _context.Exams.AsNoTracking().Any(c => c.DueDate == date);
+        return _context.Exams.AsNoTracking().Any(c => c.Name== name);
 
     }
 
-    private bool IsExamNewNameNotExist(DateTime date)
+    private bool IsExamNewNameNotExist(string name)
     {
-        return !(_context.Exams.AsNoTracking().Any(c => c.DueDate == date));
+        return !(_context.Exams.AsNoTracking().Any(c => c.Name == name));
     }
 
 }

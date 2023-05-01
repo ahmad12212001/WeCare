@@ -18,12 +18,12 @@ public class DeleteExamVaildator : AbstractValidator <DeleteExamCommand>
     {
 
         _context = applicationDbContext;
-        RuleFor(v => v.Date).Must(IsExamExists)
+        RuleFor(v => v.Id).Must(IsExamExists)
             .NotEmpty().NotNull();
     }
-    private bool IsExamExists(DateTime data)
+    private bool IsExamExists(int id)
     {
-        return _context.Exams.AsNoTracking().Any(c => c.DueDate == data);
+        return _context.Exams.AsNoTracking().Any(c => c.Id == id);
     }
 
 

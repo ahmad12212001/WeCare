@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeCare.Application.Common.Models;
+using WeCare.Application.Courses.Commands.DeleteCourse;
 using WeCare.Application.Majors.Commands.CreateMajors;
+using WeCare.Application.Majors.Commands.DeleteMajors;
 using WeCare.Application.Majors.Commands.UpdateMajors;
 using WeCare.Application.Majors.Dtos;
 using WeCare.Application.Majors.Queries.GetMajor;
 
-namespace WeCare.WebUI.Controllers;
 
+namespace WeCare.WebUI.Controllers;
+[Route("api/[controller]")]
+[ApiController]
 public class MajorsController : ApiControllerBase
 {
 
@@ -32,5 +36,9 @@ public class MajorsController : ApiControllerBase
     {
         return await Mediator.Send(command);
     }
-
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<string>> Delete(int id)
+    {
+        return await Mediator.Send(new DeleteMajorsCommand { MajorId = id });
+    }
 }

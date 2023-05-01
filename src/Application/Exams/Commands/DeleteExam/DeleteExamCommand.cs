@@ -12,7 +12,7 @@ namespace WeCare.Application.Exams.Commands.DeleteCourse;
 [Authorize(Roles = "AcademicStaff")]
 public record DeleteExamCommand : IRequest<int>
 {
-    public DateTime Date { get; set; }
+    public int Id { get; set; } 
 }
 public class DeleteExamCommandHandler : IRequestHandler<DeleteExamCommand, int> {
     private readonly IApplicationDbContext _context;
@@ -22,7 +22,7 @@ public class DeleteExamCommandHandler : IRequestHandler<DeleteExamCommand, int> 
     }
     public async Task<int> Handle(DeleteExamCommand request, CancellationToken cancellationToken) 
     {
-        var exam = (await _context.Exams.FindAsync(request.Date))!;
+        var exam = (await _context.Exams.FindAsync(request.Id))!;
         await _context.SaveChangesAsync(cancellationToken);
         return exam.Id;
     }

@@ -13,7 +13,7 @@ using WeCare.Domain.Entities;
 namespace WeCare.Application.Exams.Commands.UpdateExam;
 public record UpdateExamCommand : IRequest<ExamDto>
 {
-    public DateTime OldDueDate { get; set; }
+    public string Name { get; set; }
     public DateTime NewDueDate { get; set; }
     public string Hallno { get; set; } = null!;
     public string Location { get; set; } = null!;
@@ -31,7 +31,7 @@ public class UpdateExamCommandHandler : IRequestHandler<UpdateExamCommand, ExamD
     }
     public async Task<ExamDto> Handle(UpdateExamCommand request, CancellationToken cancellationToken) 
     {
-        var exam = (await _context.Exams.FindAsync(request.OldDueDate))!;
+        var exam = (await _context.Exams.FindAsync(request.Name))!;
         exam.Location = request.Location;
         exam.HallNo= request.Hallno;
         exam.DueDate = request.NewDueDate;

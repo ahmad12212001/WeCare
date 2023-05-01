@@ -1,22 +1,29 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthorizeGuard } from '../api-authorization/authorize.guard';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { TodoComponent } from './todo/todo.component';
-import { TokenComponent } from './token/token.component';
+import { ErrorStyleComponent } from './shared/components/layouts/error-style/error-style.component';
+import { error_content } from './shared/routes/error-content-router';
+import { FullContentComponent } from './shared/components/layouts/full-content/full-content.component';
+
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'counter', component: CounterComponent },
-  { path: 'fetch-data', component: FetchDataComponent },
-  { path: 'todo', component: TodoComponent, canActivate: [AuthorizeGuard] },
-  { path: 'token', component: TokenComponent, canActivate: [AuthorizeGuard] }
+  { path: '', redirectTo: '/authentication/login', pathMatch: 'full' },
+  {
+    path: '', component: FullContentComponent, children: [
+      {
+        path: 'exams',
+        canActivate: [AuthorizeGuard],
+        loadChildren: () => import('../app/pages/academic-staff-pages/exams/exams.module').then(m => m.ExamsModule)
+      }
+    ]
+  }
+  ,
+  { path: '', component: ErrorStyleComponent, children: error_content },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
