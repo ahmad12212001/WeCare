@@ -48,6 +48,10 @@ export class AuthorizeService {
     return this.getUser().pipe(map(u => !!u));
   }
 
+  public isUnAuthenticated(): Observable<boolean> {
+    return this.getUser().pipe(map(u => u == null));
+  }
+
   public getUser(): Observable<IUser | null> {
     return concat(
       this.userSubject.pipe(take(1), filter(u => !!u)),

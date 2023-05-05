@@ -5,6 +5,8 @@ import { LogoutComponent } from './logout/logout.component';
 import { RouterModule } from '@angular/router';
 import { ApplicationPaths } from './api-authorization.constants';
 import { HttpClientModule } from '@angular/common/http';
+import { UnAuthorizeGuard } from './unauthorize.guard';
+import { AuthorizeGuard } from './authorize.guard';
 
 @NgModule({
   imports: [

@@ -24,7 +24,6 @@ import { SidemenuToggleDirective } from './directives/sidemenuToggle';
 import { HoverEffectSidebarDirective } from './directives/hover-effect-sidebar.directive';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CloseSwitcherDirective } from './directives/close-switcher.directive';
-import { ApiAuthorizationModule } from '../../api-authorization/api-authorization.module';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -57,8 +56,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     NgbModule,
     FormsModule,
-    ColorPickerModule,
-    ApiAuthorizationModule
+    ColorPickerModule
   ],
   providers: [
     {
@@ -73,8 +71,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HeaderBreadcrumbComponent,
     TabToTopComponent,
     LoaderComponent,
-    NgbModule,
-    ApiAuthorizationModule
+    NgbModule
   ]
 })
 export class SharedModule { }

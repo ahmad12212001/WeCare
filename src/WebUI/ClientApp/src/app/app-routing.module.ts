@@ -6,20 +6,19 @@ import { error_content } from './shared/routes/error-content-router';
 import { FullContentComponent } from './shared/components/layouts/full-content/full-content.component';
 
 
+
 export const routes: Routes = [
-  { path: '', redirectTo: '/authentication/login', pathMatch: 'full' },
   {
-    path: '', component: FullContentComponent, children: [
+    path: '', component: FullContentComponent, canActivate: [AuthorizeGuard], children: [
       {
         path: 'exams',
-        canActivate: [AuthorizeGuard],
         loadChildren: () => import('../app/pages/academic-staff-pages/exams/exams.module').then(m => m.ExamsModule)
-      }
+      },
+      { path: '', redirectTo: 'exams', pathMatch: 'full' }
     ]
   }
   ,
-  { path: '', component: ErrorStyleComponent, children: error_content },
-  { path: '**', redirectTo: '' }
+  { path: '', component: ErrorStyleComponent, children: error_content }
 ];
 
 @NgModule({

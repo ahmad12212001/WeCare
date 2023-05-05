@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
+import { ApiAuthorizationModule } from '../api-authorization/api-authorization.module';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
+    ApiAuthorizationModule,
     ReactiveFormsModule,
     AppRoutingModule,
     ModalModule.forRoot()

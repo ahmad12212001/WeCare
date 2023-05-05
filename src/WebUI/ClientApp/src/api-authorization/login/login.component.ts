@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
         // There should not be any redirects as completeSignIn never redirects.
         throw new Error('Should not redirect.');
       case AuthenticationResultStatus.Success:
-        await this.navigateToReturnUrl(this.getReturnUrl(result.state));
+        await this.navigateToReturnUrl(this.getReturnUrl(result.state ?? "/"));
         break;
       case AuthenticationResultStatus.Fail:
         this.message.next(result.message);
