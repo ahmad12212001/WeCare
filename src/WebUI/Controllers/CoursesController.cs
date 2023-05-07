@@ -6,8 +6,6 @@ using WeCare.Application.Courses.Commands.UpdateCourse;
 using WeCare.Application.Courses.Dtos;
 using WeCare.Application.Courses.Queries.GetCourse;
 using WeCare.Application.Courses.Queries.GetCourses;
-using WeCare.Application.Majors.Dtos;
-using WeCare.Application.Majors.Queries.GetMajor;
 
 namespace WeCare.WebUI.Controllers;
 [Route("api/[controller]")]
@@ -19,6 +17,13 @@ public class CoursesController : ApiControllerBase
     {
         return await Mediator.Send(getCoursesQuery);
     }
+
+    [HttpGet("academic")]
+    public async Task<ActionResult<List<CourseDto>>> Get([FromQuery] GetAcademicStaffCoursesQuery getCoursesQuery)
+    {
+        return await Mediator.Send(getCoursesQuery);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<CourseDto>> Getcourse(int id)
     {
@@ -31,9 +36,15 @@ public class CoursesController : ApiControllerBase
         return await Mediator.Send(command);
     }
 
-    [HttpPut]
-    public async Task<ActionResult<CourseDto>> Update(UpdateCourseCommand command)
+    [HttpPut("{id}")]
+    public async Task<ActionResult<CourseDto>> Update(int id, UpdateCourseCommand command)
     {
+        var course = await Mediator.Send(new GetCourseQuery() { CourseId = id });
+        if (course == null)
+        {
+            return NotFound();
+        }
+
         return await Mediator.Send(command);
     }
 

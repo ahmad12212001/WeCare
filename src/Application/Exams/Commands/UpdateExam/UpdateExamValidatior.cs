@@ -16,11 +16,8 @@ public class  UpdateExamValidatior : AbstractValidator<UpdateExamCommand>
 
     public UpdateExamValidatior(IApplicationDbContext applicationDbContext) {
         _context = applicationDbContext;
-        RuleFor(v => v.Name).Must(IsExamExists).NotEmpty().NotNull();
         RuleFor(v => v.Location).NotEmpty().NotNull();
         RuleFor(v => v.Hallno).NotEmpty().NotNull();
-        RuleFor(v => v).Must(v => IsExamNewNameNotExist(v.Name))
-          .NotEmpty().NotNull();
 
 
     }

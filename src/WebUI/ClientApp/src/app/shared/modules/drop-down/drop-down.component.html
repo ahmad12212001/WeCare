@@ -1,0 +1,12 @@
+<div (clickOutside)="closeDll($event)">
+  <div class="form-group drop-down-input">
+    <label>{{label}}</label>
+    <input type="text" (click)="openDll()" autocomplete="off" class="form-control" [placeholder]="placeholder"
+      [value]="value ? value?.name : ''" [disabled]="disabled">
+    <ul class="ddl country-ddl" [ngClass]="{'visible': opened}">
+      <li *ngFor="let item of options" (click)="setItem(item)">{{item?.name}}</li>
+    </ul>
+    <div class="err-msg">{{errorMessage}}</div>
+
+  </div>
+</div>

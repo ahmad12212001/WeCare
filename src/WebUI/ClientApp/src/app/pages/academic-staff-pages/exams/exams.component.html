@@ -1,3 +1,22 @@
-<p>
-  exams works!
-</p>
+<div class="col-xl-12">
+    <div class="card mg-b-20">
+        <div class="card-header pb-0">
+            <div>
+                <h6 class="main-content-label mb-1">Ngx DataTable</h6>
+                <p class="text-muted card-sub-title">Ngx-DataTable using material theme DataTables.</p>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <ngx-datatable class="material" [rows]="dataTable" columnMode="force" [headerHeight]="50"
+                [footerHeight]="50" [rowHeight]="50" [scrollbarV]="true" [summaryRow]="true"
+                [summaryPosition]="'bottom'">
+                <ngx-datatable-column name="First Name" [width]="100"></ngx-datatable-column>
+                <ngx-datatable-column name="Last Name" [width]="100"></ngx-datatable-column>
+                <ngx-datatable-column name="Position" [width]="100"></ngx-datatable-column>
+                <ngx-datatable-column name="Email" [width]="100"></ngx-datatable-column>
+
+            </ngx-datatable>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<div (clickOutside)="closeDll($event)">
+  <div class="form-group "
+    [ngClass]="{'form-group-add-arrow symbol-input':  hasAddOption,'form-group-arrow ':!hasAddOption}">
+    <label>{{label}} </label>
+    <input [id]="id" type="text" class="form-control" placeholder="{{placeholder}}" required (blur)="onTouched()"
+      (keydown)="onInput($event)" [value]="value?.name" [disabled]="disabled" (click)="openDll()" disableAutofill>
+    <ul [ngClass]="{'visible': opened,'ddl ':!hasAddOption ,'ddl-add ' : hasAddOption }" class="country-ddl">
+      <li class="search-row">
+        <input type="text" class="form-control form-control-sm" placeholder="{{placeholder}}"
+          autocomplete="new-password" disableAutofill [formControl]="searchControl" focus *ngIf="opened">
+      </li>
+      <li *ngFor="let item of filteredList$ | async" (click)="setItem(item)">
+        <img [src]="item?.image | safe" *ngIf="item?.image">
+        {{item?.name}}
+      </li>
+    </ul>
+    <div *ngIf="hasAddOption" class="symbol-input-icon" style="background:#E00844" (click)="add()"><img
+        src="/assets/icons/plus-white.svg"></div>
+    <div class="err-msg">{{errorMessage}}</div>
+  </div>
+</div>

@@ -17,13 +17,14 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
 import { FullscreenToggleDirective } from './directives/fullscreen-toggle.directive';
 import { ToggleThemeDirective } from './directives/toggle-theme.directive';
 import { SidemenuToggleDirective } from './directives/sidemenuToggle';
 import { HoverEffectSidebarDirective } from './directives/hover-effect-sidebar.directive';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CloseSwitcherDirective } from './directives/close-switcher.directive';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DirectivesModule } from './directives';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -40,7 +41,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HeaderBreadcrumbComponent,
     TabToTopComponent,
     FullContentComponent,
-    ErrorStyleComponent, 
+    ErrorStyleComponent,
     ContentStyleComponent,
     HeaderBreadcrumbComponent,
     TabToTopComponent,
@@ -55,8 +56,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     RouterModule,
     PerfectScrollbarModule,
     NgbModule,
-    FormsModule,
-    ColorPickerModule
+    ReactiveFormsModule,
+    ColorPickerModule,
+    DirectivesModule
   ],
   providers: [
     {
@@ -64,14 +66,16 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     }
   ],
-  exports:[
+  exports: [
     FullContentComponent,
-    ErrorStyleComponent, 
+    ErrorStyleComponent,
     ContentStyleComponent,
     HeaderBreadcrumbComponent,
     TabToTopComponent,
     LoaderComponent,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule,
+    DirectivesModule
   ]
 })
 export class SharedModule { }

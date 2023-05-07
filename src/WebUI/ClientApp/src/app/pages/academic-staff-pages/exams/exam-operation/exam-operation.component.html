@@ -1,0 +1,53 @@
+<app-header-breadcrumb [title]="'Create Exam'" [items]="['Academic-Pages']"
+  [active_item]="'Create Exam'"></app-header-breadcrumb>
+
+<div class="row">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Exam</h3>
+    </div>
+    <form [formGroup]="examForm" (submit)="onSubmit()" validation [form]="examForm"
+      [submitted]="(submitted$ | async) || false">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="hallNo"></label>
+            <input type="text" class="form-control" placeholder="Hall No." formControlName="hallNo">
+            <div class="err-msg">Hall No. is Required</div>
+          </div>
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="location"></label>
+            <input type="text" class="form-control" placeholder="Location" formControlName="location">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="dueDate"></label>
+            <input type="date" class="form-control" placeholder="Dute Date" formControlName="dueDate">
+          </div>
+          <!-- <div class="col-lg-6 col-md-12 form-group">
+            <label for="dueDate"></label>
+            <div class="input-group">
+              <div class="input-group-text">
+                <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+              </div>
+              <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="dueDate" ngbDatepicker
+                (click)="d.toggle()" #d="ngbDatepicker" autocomplete="off">
+            </div>
+            <div class="err-msg">DueDate is Required</div>
+          </div> -->
+          <div class="col-md-6 col-sm-12">
+            <drop-down [options]="courses" formControlName="courseId" [label]="'Courses'" [id]="'courseId'"
+              [placeholder]="'Select Course'">
+            </drop-down>
+          </div>
+        </div>
+
+      </div>
+      <div class="card-footer text-end">
+        <button type="Submit" class="btn btn-success mt-1 me-2">Save</button>
+      </div>
+
+    </form>
+  </div>
+</div>

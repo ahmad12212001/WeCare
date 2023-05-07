@@ -84,31 +84,39 @@
             }
           }
         }
-      },
-      "put": {
+      }
+    },
+    "/api/Courses/academic": {
+      "get": {
         "tags": [
           "Courses"
         ],
-        "operationId": "Courses_Update",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCourseCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
+        "operationId": "Courses_GetAll",
+        "parameters": [
+          {
+            "name": "getCoursesQuery",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/GetAcademicStaffCoursesQuery"
+                }
+              ]
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CourseDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CourseDto"
+                  }
                 }
               }
             }
@@ -134,6 +142,48 @@
             "x-position": 1
           }
         ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Courses"
+        ],
+        "operationId": "Courses_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
         "responses": {
           "200": {
             "description": "",
@@ -178,12 +228,12 @@
         }
       }
     },
-    "/api/Exam/{id}": {
+    "/api/Exams": {
       "get": {
         "tags": [
-          "Exam"
+          "Exams"
         ],
-        "operationId": "Exam_GetExam",
+        "operationId": "Exams_GetExam",
         "parameters": [
           {
             "name": "name",
@@ -193,15 +243,6 @@
               "nullable": true
             },
             "x-position": 1
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
           }
         ],
         "responses": {
@@ -217,44 +258,11 @@
           }
         }
       },
-      "delete": {
-        "tags": [
-          "Exam"
-        ],
-        "operationId": "Exam_Delete",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Exam": {
       "post": {
         "tags": [
-          "Exam"
+          "Exams"
         ],
-        "operationId": "Exam_CreateExam",
+        "operationId": "Exams_CreateExam",
         "requestBody": {
           "x-name": "createExamCommand",
           "content": {
@@ -280,12 +288,56 @@
             }
           }
         }
+      }
+    },
+    "/api/Exams/{id}": {
+      "get": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_GetExam2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExamDto"
+                }
+              }
+            }
+          }
+        }
       },
       "put": {
         "tags": [
-          "Exam"
+          "Exams"
         ],
-        "operationId": "Exam_Update",
+        "operationId": "Exams_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -296,7 +348,7 @@
             }
           },
           "required": true,
-          "x-position": 1
+          "x-position": 2
         },
         "responses": {
           "200": {
@@ -305,6 +357,37 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExamDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_Delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -1059,6 +1142,10 @@
           }
         }
       },
+      "GetAcademicStaffCoursesQuery": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "CreateCourseCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -1085,15 +1172,27 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "date": {
+          "name": {
+            "type": "string"
+          },
+          "dueDate": {
             "type": "string",
             "format": "date-time"
           },
-          "hallNu": {
+          "hallNo": {
             "type": "string"
           },
-          "loc": {
-            "type": "string"
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1106,7 +1205,8 @@
             "format": "date-time"
           },
           "hallNo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "location": {
             "type": "string"
@@ -1121,10 +1221,11 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "name": {
-            "type": "string"
+          "id": {
+            "type": "integer",
+            "format": "int32"
           },
-          "newDueDate": {
+          "dueDate": {
             "type": "string",
             "format": "date-time"
           },

@@ -10,13 +10,9 @@ namespace WeCare.Application.Exams.Commands.CreateExam;
 public record CreateExamsCommand : IRequest<int>
 {
     public DateTime DueDate { get; set; }
-    public string HallNo { get; set; } = null!;
+    public string? HallNo { get; set; }
     public string Location { get; set; } = null!;
     public int CourseId { get; set; }
-
-
-
-
 
 }
 

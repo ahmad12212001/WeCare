@@ -13,8 +13,8 @@ using WeCare.Domain.Entities;
 namespace WeCare.Application.Exams.Commands.UpdateExam;
 public record UpdateExamCommand : IRequest<ExamDto>
 {
-    public string Name { get; set; }
-    public DateTime NewDueDate { get; set; }
+    public int Id { get; set; }
+    public DateTime DueDate { get; set; }
     public string Hallno { get; set; } = null!;
     public string Location { get; set; } = null!;
 }
@@ -31,10 +31,10 @@ public class UpdateExamCommandHandler : IRequestHandler<UpdateExamCommand, ExamD
     }
     public async Task<ExamDto> Handle(UpdateExamCommand request, CancellationToken cancellationToken) 
     {
-        var exam = (await _context.Exams.FindAsync(request.Name))!;
+        var exam = (await _context.Exams.FindAsync(request.Id))!;
         exam.Location = request.Location;
         exam.HallNo= request.Hallno;
-        exam.DueDate = request.NewDueDate;
+        exam.DueDate =request.DueDate.ToUniversalTime();
         await _context.SaveChangesAsync(cancellationToken);
         return _mapper.Map<ExamDto>(exam);
     }
