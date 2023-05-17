@@ -1,0 +1,54 @@
+<div class="modal-body">
+  <div class="container-fluid px-4 pt-4" *ngIf="alert.type ===notificationTypes.Note">
+    <div class="row ">
+      <div class="col-10 text-center justify-content">
+        <img class="mb-4 mx-auto" style="width:50px;" [src]="alert?.image" *ngIf="alert?.image" />
+        <h5 class="{{cssClass(alert)}} justify-content " *ngIf="alert?.header">{{alert?.header}}</h5>
+        <p style="width: 100%;">{{alert?.body}}</p>
+      </div>
+      <div class="col-2">
+        <button type="button" class="close pt-2 pr-0" (click)="close()">
+          <span class="close-icon">+</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid px-4 pt-4" *ngIf="alert.type !==notificationTypes.Note">
+    <div class="row text-center justify-content">
+      <img class="mb-4 mx-auto" style="width:50px;" [src]="alert?.image" *ngIf="alert?.image" />
+      <h5 class="{{cssClass(alert)}} justify-content " *ngIf="alert?.header">{{alert?.header}}</h5>
+      <p style="width: 100%;">{{alert?.body}}</p>
+
+
+    </div>
+  </div>
+  <ng-container *ngIf="alert.type ===notificationTypes.Note">
+    <div class="col-md-12 col-sm-12 form-group" [ngClass]="{'err': invalid}">
+      <label>{{alert?.label}}</label>
+      <textarea class="form-control" [placeholder]="alert?.placeholder" [formControl]="note"></textarea>
+      <div class="err-msg">{{alert?.errorMessage}}</div>
+    </div>
+
+  </ng-container>
+
+
+  <ng-container>
+
+    <div class="row mt-3" *ngIf="(alert.actionMessage || alert.showCloseButton)  ">
+      <div class="col-6" *ngIf="alert.type !==notificationTypes.Note" [ngClass]="{'col-6': alert.actionMessage && alert.showCloseButton,
+      'col-12':(alert.actionMessage || alert.showCloseButton) && !(alert.actionMessage && alert.showCloseButton)}">
+        <button class="btn {{alert?.closeButtonCss}} btn-lg w-100 mb-3 text-uppercase" (click)="closeAlert()">
+          {{alert?.closeButtonText}}
+        </button>
+
+      </div>
+      <div *ngIf="alert.actionMessage"
+        [ngClass]="{'col-6':  alert.type !==notificationTypes.Note,'col-12': alert.type ===notificationTypes.Note}">
+        <button class="btn  {{alert?.cssClass}} btn-lg w-100 mb-3 text-uppercase"
+          (click)="submitAction()">{{alert.actionMessage}}</button>
+      </div>
+    </div>
+  </ng-container>
+
+
+</div>

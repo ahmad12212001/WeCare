@@ -1,0 +1,27 @@
+.alert-modal {
+  margin: .5rem auto;
+  max-width: 95%;
+}
+
+.modal-content {
+  border-radius: 15px;
+}
+
+.justify-content {
+  justify-content: center;
+}
+.close-icon {
+  font-size: 70px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  transform: rotateZ(45deg) !important;
+  font-weight: 100;
+  //text-shadow: 1px 1px 0 black;
+  display: block;
+
+  &:focus {
+    outline: none !important;
+  }
+
+}

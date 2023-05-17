@@ -1,0 +1,48 @@
+<app-header-breadcrumb [title]="'Create Request'" [items]="['Academic-Pages']"
+  [active_item]="'Create Request'"></app-header-breadcrumb>
+
+<div class="row">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Requests</h3>
+    </div>
+    <form [formGroup]="requestForm" (submit)="onSubmit()" validation [form]="requestForm"
+      [submitted]="(submitted$ | async) || false">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="description"></label>
+            <input type="text" class="form-control" placeholder="Description" formControlName="description">
+          </div>
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="dueDate"></label>
+            <input type="date" class="form-control" placeholder="Dute Date" formControlName="dueDate">
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+            <drop-down [options]="requestTypes" formControlName="requestType" [id]="'requestType'"
+              [placeholder]="'Select Request Type'">
+            </drop-down>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <drop-down [options]="courses$ | async" formControlName="course" [id]="'course6'"
+              [placeholder]="'Select Course'">
+            </drop-down>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+
+            <drop-down [options]="exams$ | async" formControlName="exam" [id]="'exam'" [placeholder]="'Select Exam'">
+            </drop-down>
+          </div>
+        </div>
+        <div class="card-footer text-end">
+          <button type="Submit" class="btn btn-success mt-1 me-2">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

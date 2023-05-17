@@ -17,7 +17,10 @@ namespace WeCare.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -394,6 +397,9 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
+                    b.Property<int>("MajorGroupId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -404,53 +410,11 @@ namespace WeCare.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MajorGroupId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("WeCare.Domain.Entities.Document", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<int>("DocumentType")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<int>("MaterialId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Materiald")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MaterialId");
-
-                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("WeCare.Domain.Entities.Exam", b =>
@@ -497,6 +461,34 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.ToTable("Exams");
                 });
 
+            modelBuilder.Entity("WeCare.Domain.Entities.Job", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CronExpression")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Jobs");
+                });
+
             modelBuilder.Entity("WeCare.Domain.Entities.Major", b =>
                 {
                     b.Property<int>("Id")
@@ -517,13 +509,47 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
+                    b.Property<int>("MajorGroupId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MajorGroupId");
+
                     b.ToTable("Majors");
+                });
+
+            modelBuilder.Entity("WeCare.Domain.Entities.MajorGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MajorGroups");
                 });
 
             modelBuilder.Entity("WeCare.Domain.Entities.Material", b =>
@@ -533,6 +559,10 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("CourseId")
                         .HasColumnType("integer");
@@ -553,13 +583,30 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
+                    b.Property<int>("MaterialStatus")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("RequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("VolunteerStudentId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("RequestId");
+
+                    b.HasIndex("VolunteerStudentId");
 
                     b.ToTable("Materials");
                 });
@@ -584,6 +631,10 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int?>("DisabilityStudentId")
                         .HasColumnType("integer");
 
@@ -598,9 +649,6 @@ namespace WeCare.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
-
-                    b.Property<int?>("MaterialId")
-                        .HasColumnType("integer");
 
                     b.Property<decimal?>("Rate")
                         .HasColumnType("numeric");
@@ -620,8 +668,6 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.HasIndex("DisabilityStudentId");
 
                     b.HasIndex("ExamId");
-
-                    b.HasIndex("MaterialId");
 
                     b.ToTable("Requests");
                 });
@@ -649,6 +695,9 @@ namespace WeCare.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("numeric");
 
                     b.Property<int>("RequestId")
                         .HasColumnType("integer");
@@ -727,9 +776,15 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<int>("MajorId")
                         .HasColumnType("integer");
 
+                    b.Property<decimal?>("Rate")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("StudentId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int?>("TotalRequest")
+                        .HasColumnType("integer");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -773,9 +828,6 @@ namespace WeCare.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("WeCare.Domain.Entities.VolunteerStudent", b =>
                 {
                     b.HasBaseType("WeCare.Domain.Entities.Student");
-
-                    b.Property<decimal?>("Rate")
-                        .HasColumnType("numeric");
 
                     b.HasDiscriminator().HasValue("VolunteerStudent");
                 });
@@ -833,24 +885,21 @@ namespace WeCare.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("WeCare.Domain.Entities.Course", b =>
                 {
+                    b.HasOne("WeCare.Domain.Entities.MajorGroup", "MajorGroup")
+                        .WithMany()
+                        .HasForeignKey("MajorGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WeCare.Domain.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("MajorGroup");
+
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WeCare.Domain.Entities.Document", b =>
-                {
-                    b.HasOne("WeCare.Domain.Entities.Material", "Material")
-                        .WithMany("Documents")
-                        .HasForeignKey("MaterialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Material");
                 });
 
             modelBuilder.Entity("WeCare.Domain.Entities.Exam", b =>
@@ -864,6 +913,17 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("WeCare.Domain.Entities.Major", b =>
+                {
+                    b.HasOne("WeCare.Domain.Entities.MajorGroup", "MajorGroup")
+                        .WithMany("Majors")
+                        .HasForeignKey("MajorGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MajorGroup");
+                });
+
             modelBuilder.Entity("WeCare.Domain.Entities.Material", b =>
                 {
                     b.HasOne("WeCare.Domain.Entities.Course", "Course")
@@ -872,7 +932,19 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WeCare.Domain.Entities.Request", "Request")
+                        .WithMany("Material")
+                        .HasForeignKey("RequestId");
+
+                    b.HasOne("WeCare.Domain.Entities.VolunteerStudent", "VolunteerStudent")
+                        .WithMany()
+                        .HasForeignKey("VolunteerStudentId");
+
                     b.Navigation("Course");
+
+                    b.Navigation("Request");
+
+                    b.Navigation("VolunteerStudent");
                 });
 
             modelBuilder.Entity("WeCare.Domain.Entities.Request", b =>
@@ -895,10 +967,6 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("ExamId");
 
-                    b.HasOne("WeCare.Domain.Entities.Material", "Material")
-                        .WithMany()
-                        .HasForeignKey("MaterialId");
-
                     b.Navigation("AssignedVolunteerStudent");
 
                     b.Navigation("Course");
@@ -906,8 +974,6 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Navigation("DisabilityStudent");
 
                     b.Navigation("Exam");
-
-                    b.Navigation("Material");
                 });
 
             modelBuilder.Entity("WeCare.Domain.Entities.RequestFeedBack", b =>
@@ -1000,14 +1066,16 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Navigation("Students");
                 });
 
-            modelBuilder.Entity("WeCare.Domain.Entities.Material", b =>
+            modelBuilder.Entity("WeCare.Domain.Entities.MajorGroup", b =>
                 {
-                    b.Navigation("Documents");
+                    b.Navigation("Majors");
                 });
 
             modelBuilder.Entity("WeCare.Domain.Entities.Request", b =>
                 {
                     b.Navigation("FeedBacks");
+
+                    b.Navigation("Material");
 
                     b.Navigation("Volunteers");
                 });

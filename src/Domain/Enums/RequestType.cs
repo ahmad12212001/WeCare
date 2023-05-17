@@ -1,7 +1,7 @@
 ﻿namespace WeCare.Domain.Enums;
 public enum RequestType
 {
-    Assistance = 0,
-    Material = 1,
-    Assignment = 2
+    Assistance = 1,
+    Material = 2,
+    Assignment = 4
 }

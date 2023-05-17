@@ -13,9 +13,16 @@ namespace WeCare.WebUI.Controllers;
 public class CoursesController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<CourseDto>>> Get([FromQuery] GetCoursesQuery getCoursesQuery)
+    public async Task<ActionResult<PaginatedList<CourseDto>>> Get([FromQuery] GetCoursesPaginationQuery getCoursesQuery)
     {
         return await Mediator.Send(getCoursesQuery);
+    }
+
+    [HttpGet("list")]
+    public async Task<ActionResult<List<CourseDto>>> Get()
+    {
+        var coursesQuery = new GetCoursesQuery();
+        return await Mediator.Send(coursesQuery);
     }
 
     [HttpGet("academic")]
@@ -25,7 +32,7 @@ public class CoursesController : ApiControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<CourseDto>> Getcourse(int id)
+    public async Task<ActionResult<CourseDto>> GetCourse(int id)
     {
         return await Mediator.Send(new GetCourseQuery() { CourseId = id });
     }
@@ -49,7 +56,7 @@ public class CoursesController : ApiControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<string>> Delete(int id)
+    public async Task<ActionResult<int>> Delete(int id)
     {
         return await Mediator.Send(new DeleteCourseCommand { CourseId = id });
     }

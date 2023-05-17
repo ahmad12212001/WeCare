@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WeCare.WebUI.Controllers;
+namespace WeCare.WeCare.WebUI.Controllers;
 [ApiExplorerSettings(IgnoreApi = true)]
 public class OidcConfigurationController : Controller
 {

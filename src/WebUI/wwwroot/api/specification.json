@@ -86,12 +86,35 @@
         }
       }
     },
-    "/api/Courses/academic": {
+    "/api/Courses/list": {
       "get": {
         "tags": [
           "Courses"
         ],
         "operationId": "Courses_GetAll",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CourseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Courses/academic": {
+      "get": {
+        "tags": [
+          "Courses"
+        ],
+        "operationId": "Courses_GetAll2",
         "parameters": [
           {
             "name": "getCoursesQuery",
@@ -129,7 +152,7 @@
         "tags": [
           "Courses"
         ],
-        "operationId": "Courses_Getcourse",
+        "operationId": "Courses_GetCourse",
         "parameters": [
           {
             "name": "id",
@@ -220,7 +243,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -228,7 +252,7 @@
         }
       }
     },
-    "/api/Exams": {
+    "/api/Exams/{name}": {
       "get": {
         "tags": [
           "Exams"
@@ -237,7 +261,8 @@
         "parameters": [
           {
             "name": "name",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string",
               "nullable": true
@@ -257,6 +282,55 @@
             }
           }
         }
+      }
+    },
+    "/api/Exams": {
+      "get": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_GetExams",
+        "parameters": [
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfExamDto"
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
         "tags": [
@@ -268,7 +342,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateExamsCommand"
+                "$ref": "#/components/schemas/CreateExamCommand"
               }
             }
           },
@@ -283,6 +357,29 @@
                 "schema": {
                   "type": "integer",
                   "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Exams/List": {
+      "get": {
+        "tags": [
+          "Exams"
+        ],
+        "operationId": "Exams_GetExamsAll",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExamDto"
+                  }
                 }
               }
             }
@@ -567,6 +664,131 @@
         }
       }
     },
+    "/api/Materials": {
+      "post": {
+        "tags": [
+          "Materials"
+        ],
+        "operationId": "Materials_CreateMaterail",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "Description": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "CourseId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "RequestId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "nullable": true
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Requests": {
+      "post": {
+        "tags": [
+          "Requests"
+        ],
+        "operationId": "Requests_Create",
+        "requestBody": {
+          "x-name": "createRequestCommand",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Requests"
+        ],
+        "operationId": "Requests_Get",
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfRequestDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Student/{id}": {
       "get": {
         "tags": [
@@ -632,15 +854,15 @@
         }
       }
     },
-    "/api/TodoItems": {
+    "/api/Volunteers": {
       "get": {
         "tags": [
-          "TodoItems"
+          "Volunteers"
         ],
-        "operationId": "TodoItems_GetTodoItemsWithPagination",
+        "operationId": "Volunteers_GetVolunteers",
         "parameters": [
           {
-            "name": "ListId",
+            "name": "Id",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -649,7 +871,7 @@
             "x-position": 1
           },
           {
-            "name": "PageNumber",
+            "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -658,7 +880,7 @@
             "x-position": 2
           },
           {
-            "name": "PageSize",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -673,422 +895,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfTodoItemBriefDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "TodoItems"
-        ],
-        "operationId": "TodoItems_Create",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTodoItemCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/TodoItems/{id}": {
-      "put": {
-        "tags": [
-          "TodoItems"
-        ],
-        "operationId": "TodoItems_Update",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTodoItemCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 2
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "TodoItems"
-        ],
-        "operationId": "TodoItems_Delete",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/TodoItems/UpdateItemDetails": {
-      "put": {
-        "tags": [
-          "TodoItems"
-        ],
-        "operationId": "TodoItems_UpdateItemDetails",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTodoItemDetailCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 2
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/TodoLists": {
-      "get": {
-        "tags": [
-          "TodoLists"
-        ],
-        "operationId": "TodoLists_Get",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TodosVm"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "TodoLists"
-        ],
-        "operationId": "TodoLists_Create",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTodoListCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/TodoLists/{id}": {
-      "get": {
-        "tags": [
-          "TodoLists"
-        ],
-        "operationId": "TodoLists_Get2",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "TodoLists"
-        ],
-        "operationId": "TodoLists_Update",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTodoListCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 2
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "TodoLists"
-        ],
-        "operationId": "TodoLists_Delete",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/WeatherForecast": {
-      "get": {
-        "tags": [
-          "WeatherForecast"
-        ],
-        "operationId": "WeatherForecast_Get",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Requests": {
-      "post": {
-        "tags": [
-          "Requests"
-        ],
-        "operationId": "Requests_Create",
-        "requestBody": {
-          "x-name": "createRequestCommand",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRequestCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/PaginatedListOfVolunteerDto"
                 }
               }
             }
@@ -1118,6 +925,10 @@
             "format": "int32"
           },
           "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSizee": {
             "type": "integer",
             "format": "int32"
           },
@@ -1159,7 +970,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "courseId": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
@@ -1196,7 +1007,41 @@
           }
         }
       },
-      "CreateExamsCommand": {
+      "PaginatedListOfExamDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExamDto"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSizee": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateExamCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1259,6 +1104,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "pageSizee": {
+            "type": "integer",
+            "format": "int32"
+          },
           "hasPreviousPage": {
             "type": "boolean"
           },
@@ -1302,6 +1151,122 @@
           }
         }
       },
+      "CreateRequestCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "examId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requestType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RequestType"
+              }
+            ]
+          },
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Assistance",
+          "Material",
+          "Assignment"
+        ],
+        "enum": [
+          1,
+          2,
+          4
+        ]
+      },
+      "PaginatedListOfRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestDto"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSizee": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "courseName": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "examName": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestType": {
+            "type": "string"
+          },
+          "requestStatus": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "materialName": {
+            "type": "string",
+            "nullable": true
+          },
+          "volunteerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
       "StudentsDto": {
         "type": "object",
         "additionalProperties": false,
@@ -1332,6 +1297,13 @@
               "name": {
                 "type": "string"
               },
+              "majorGroupId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "majorGroup": {
+                "$ref": "#/components/schemas/MajorGroup"
+              },
               "students": {
                 "type": "array",
                 "nullable": true,
@@ -1342,6 +1314,81 @@
             }
           }
         ]
+      },
+      "MajorGroup": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseAuditableEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "majors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Major"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "BaseAuditableEntity": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEntity"
+          },
+          {
+            "type": "object",
+            "x-abstract": true,
+            "additionalProperties": false,
+            "properties": {
+              "created": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "createdBy": {
+                "type": "string",
+                "nullable": true
+              },
+              "lastModified": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "lastModifiedBy": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "BaseEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "domainEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BaseEvent"
+            }
+          }
+        }
+      },
+      "BaseEvent": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false
       },
       "Student": {
         "allOf": [
@@ -1367,6 +1414,16 @@
               },
               "user": {
                 "$ref": "#/components/schemas/ApplicationUser"
+              },
+              "rate": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "totalRequest": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
               },
               "courses": {
                 "type": "array",
@@ -1506,6 +1563,10 @@
               "name": {
                 "type": "string"
               },
+              "majorGroupId": {
+                "type": "integer",
+                "format": "int32"
+              },
               "userId": {
                 "type": "string"
               },
@@ -1532,6 +1593,9 @@
                 "items": {
                   "$ref": "#/components/schemas/Exam"
                 }
+              },
+              "majorGroup": {
+                "$ref": "#/components/schemas/MajorGroup"
               }
             }
           }
@@ -1552,24 +1616,87 @@
               "description": {
                 "type": "string"
               },
+              "path": {
+                "type": "string"
+              },
+              "contentType": {
+                "type": "string"
+              },
               "courseId": {
                 "type": "integer",
                 "format": "int32"
               },
+              "materialStatus": {
+                "$ref": "#/components/schemas/MaterialStatus"
+              },
+              "requestId": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "volunteerStudentId": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
               "course": {
                 "$ref": "#/components/schemas/Course"
               },
-              "documents": {
+              "volunteerStudent": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/VolunteerStudent"
+                  }
+                ]
+              },
+              "request": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Request"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "MaterialStatus": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Pending",
+          "Rejected",
+          "Approved"
+        ],
+        "enum": [
+          1,
+          2,
+          4
+        ]
+      },
+      "VolunteerStudent": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Student"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "requests": {
                 "type": "array",
+                "nullable": true,
                 "items": {
-                  "$ref": "#/components/schemas/Document"
+                  "$ref": "#/components/schemas/RequestVolunteer"
                 }
               }
             }
           }
         ]
       },
-      "Document": {
+      "RequestVolunteer": {
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseAuditableEntity"
@@ -1578,96 +1705,154 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "name": {
-                "type": "string"
-              },
-              "documentType": {
-                "$ref": "#/components/schemas/DocumentType"
-              },
-              "path": {
-                "type": "string"
-              },
-              "materiald": {
+              "requestId": {
                 "type": "integer",
                 "format": "int32"
               },
-              "material": {
-                "$ref": "#/components/schemas/Material"
+              "volunteerStudentId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "volunteerStudent": {
+                "$ref": "#/components/schemas/VolunteerStudent"
+              },
+              "request": {
+                "$ref": "#/components/schemas/Request"
               }
             }
           }
         ]
       },
-      "DocumentType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Pdf",
-          "Video",
-          "Image",
-          "Word",
-          "Excel"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          4,
-          8
-        ]
-      },
-      "BaseAuditableEntity": {
+      "Request": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/BaseEntity"
+            "$ref": "#/components/schemas/BaseAuditableEntity"
           },
           {
             "type": "object",
-            "x-abstract": true,
             "additionalProperties": false,
             "properties": {
-              "created": {
+              "description": {
+                "type": "string"
+              },
+              "dueDate": {
                 "type": "string",
                 "format": "date-time"
               },
-              "createdBy": {
-                "type": "string",
+              "requestType": {
+                "$ref": "#/components/schemas/RequestType"
+              },
+              "requestStatus": {
+                "$ref": "#/components/schemas/RequestStatus"
+              },
+              "rate": {
+                "type": "number",
+                "format": "decimal",
                 "nullable": true
               },
-              "lastModified": {
-                "type": "string",
-                "format": "date-time",
+              "courseId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "examId": {
+                "type": "integer",
+                "format": "int32",
                 "nullable": true
               },
-              "lastModifiedBy": {
-                "type": "string",
+              "disabilityStudentId": {
+                "type": "integer",
+                "format": "int32",
                 "nullable": true
+              },
+              "assignedVolunteerStudentId": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "assignedVolunteerStudent": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/VolunteerStudent"
+                  }
+                ]
+              },
+              "disabilityStudent": {
+                "$ref": "#/components/schemas/DisabilityStudent"
+              },
+              "course": {
+                "$ref": "#/components/schemas/Course"
+              },
+              "exam": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Exam"
+                  }
+                ]
+              },
+              "material": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Material"
+                }
+              },
+              "feedBacks": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/RequestFeedBack"
+                }
+              },
+              "volunteers": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/RequestVolunteer"
+                }
               }
             }
           }
         ]
       },
-      "BaseEntity": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+      "RequestStatus": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Created",
+          "Accepted",
+          "AcceptedByVolunteer",
+          "ReAssigning",
+          "Done"
+        ],
+        "enum": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
+      },
+      "DisabilityStudent": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Student"
           },
-          "domainEvents": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BaseEvent"
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "requests": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Request"
+                }
+              }
             }
           }
-        }
-      },
-      "BaseEvent": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false
+        ]
       },
       "Exam": {
         "allOf": [
@@ -1698,6 +1883,40 @@
               },
               "course": {
                 "$ref": "#/components/schemas/Course"
+              }
+            }
+          }
+        ]
+      },
+      "RequestFeedBack": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseAuditableEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "comment": {
+                "type": "string"
+              },
+              "studentId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "requestId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "rate": {
+                "type": "number",
+                "format": "decimal"
+              },
+              "student": {
+                "$ref": "#/components/schemas/Student"
+              },
+              "request": {
+                "$ref": "#/components/schemas/Request"
               }
             }
           }
@@ -1742,14 +1961,14 @@
           1
         ]
       },
-      "PaginatedListOfTodoItemBriefDto": {
+      "PaginatedListOfVolunteerDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TodoItemBriefDto"
+              "$ref": "#/components/schemas/VolunteerDto"
             }
           },
           "pageNumber": {
@@ -1764,6 +1983,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "pageSizee": {
+            "type": "integer",
+            "format": "int32"
+          },
           "hasPreviousPage": {
             "type": "boolean"
           },
@@ -1772,261 +1995,26 @@
           }
         }
       },
-      "TodoItemBriefDto": {
+      "VolunteerDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "listId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "done": {
-            "type": "boolean"
-          }
-        }
-      },
-      "CreateTodoItemCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "listId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "UpdateTodoItemCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "done": {
-            "type": "boolean"
-          }
-        }
-      },
-      "UpdateTodoItemDetailCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "listId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "priority": {
-            "$ref": "#/components/schemas/PriorityLevel"
-          },
-          "note": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "PriorityLevel": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "None",
-          "Low",
-          "Medium",
-          "High"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "TodosVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "priorityLevels": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PriorityLevelDto"
-            }
-          },
-          "lists": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TodoListDto"
-            }
-          }
-        }
-      },
-      "PriorityLevelDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "value": {
             "type": "integer",
             "format": "int32"
           },
           "name": {
-            "type": "string",
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "format": "decimal",
             "nullable": true
+          },
+          "major": {
+            "type": "string"
           }
         }
-      },
-      "TodoListDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "colour": {
-            "type": "string",
-            "nullable": true
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TodoItemDto"
-            }
-          }
-        }
-      },
-      "TodoItemDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "listId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "done": {
-            "type": "boolean"
-          },
-          "priority": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "note": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "CreateTodoListCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "UpdateTodoListCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "WeatherForecast": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "summary": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "CreateRequestCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "dueDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "requestType": {
-            "$ref": "#/components/schemas/RequestType"
-          },
-          "examId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "courseId": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "RequestType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Assistance",
-          "Material",
-          "Assignment"
-        ],
-        "enum": [
-          0,
-          1,
-          2
-        ]
       }
     },
     "securitySchemes": {

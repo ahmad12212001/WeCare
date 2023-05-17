@@ -10,10 +10,10 @@ public class UpdateCourseValidatior : AbstractValidator<UpdateCourseCommand>
     public UpdateCourseValidatior(IApplicationDbContext applicationDbContext)
     {
         _context = applicationDbContext;
-        RuleFor(v => v.CourseId).Must(IsCourseExists)
+        RuleFor(v => v.Id).Must(IsCourseExists)
             .NotEmpty().NotNull();
         RuleFor(v => v.Name).NotEmpty().NotNull();
-        RuleFor(v => v).Must(v => IsCourseNewNameNotExist(v.CourseId, v.Name))
+        RuleFor(v => v).Must(v => IsCourseNewNameNotExist(v.Id, v.Name))
           .NotEmpty().NotNull();
     }
 

@@ -2,6 +2,7 @@
 public class Major : BaseAuditableEntity
 {
     public string Name { get; set; } = null!;
-
-    public ICollection<Student>? Students { get; set; }
+    public int MajorGroupId { get; set; }
+    public virtual MajorGroup MajorGroup { get; set; }
+    public virtual ICollection<Student>? Students { get; set; }
 }

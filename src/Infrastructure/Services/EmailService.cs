@@ -14,7 +14,7 @@ public class EmailService : IEmailService
         _configuration = options;
     }
 
-    public async Task SendEmail(EmailMessage message)
+    public async Task SendEmailAsync(EmailMessage message)
     {
         var emailMessage = CreateEmailMessage(message);
         await Send(emailMessage);

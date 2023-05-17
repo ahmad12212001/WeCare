@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+using Hangfire;
 using WeCare.Infrastructure;
 using WeCare.Infrastructure.Persistence;
 
@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebUIServices();
+
+builder.Services.AddWeCareHangfire(builder.Configuration);
 
 var app = builder.Build();
 
@@ -31,6 +33,7 @@ else
     app.UseHsts();
 }
 
+app.UseWeCareHangfire();
 app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseStaticFiles();

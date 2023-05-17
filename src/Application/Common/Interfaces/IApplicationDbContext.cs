@@ -5,8 +5,8 @@ namespace WeCare.Application.Common.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<Course> Courses { get; }
-    DbSet<Document> Documents { get; }
     DbSet<Exam> Exams { get; }
+    DbSet<Job> Jobs { get; }
     DbSet<Major> Majors { get; }
     DbSet<Material> Materials { get; }
     DbSet<Request> Requests { get; }
@@ -16,6 +16,6 @@ public interface IApplicationDbContext
     DbSet<DisabilityStudent> DisabilityStudents { get; }
     DbSet<VolunteerStudent> VolunteerStudents { get; }
     DbSet<StudentCourse> StudentCourses { get; }
-
+    DbSet<MajorGroup> MajorGroups { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -7,6 +7,11 @@ public class Result
         Succeeded = succeeded;
         Errors = errors.ToArray();
     }
+    public Result(bool succeeded, string[] errors)
+    {
+        Succeeded = succeeded;
+        Errors = errors;
+    }
 
     public bool Succeeded { get; set; }
 

@@ -61,7 +61,7 @@ public class CreateStudentCommandHandler : IRequestHandler<CreateStudentCommand,
         {
 
             //to be changed after implementation
-            await _emailService.SendEmail(new EmailMessage
+            await _emailService.SendEmailAsync(new EmailMessage
             {
                 Subject = "Registration Completed",
                 Content = "You have successfully Registered in (We care). \n" +

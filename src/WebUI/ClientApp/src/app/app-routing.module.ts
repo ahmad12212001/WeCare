@@ -14,6 +14,14 @@ export const routes: Routes = [
         path: 'exams',
         loadChildren: () => import('../app/pages/academic-staff-pages/exams/exams.module').then(m => m.ExamsModule)
       },
+      {
+        path: 'courses',
+        loadChildren: () => import('../app/pages/academic-staff-pages/courses/courses.module').then(m => m.CoursesModule)
+      },
+      {
+        path: 'requests',
+        loadChildren: () => import('../app/pages/disability-student-pages/requests/requests.module').then(m => m.RequestsModule)
+      },
       { path: '', redirectTo: 'exams', pathMatch: 'full' }
     ]
   }

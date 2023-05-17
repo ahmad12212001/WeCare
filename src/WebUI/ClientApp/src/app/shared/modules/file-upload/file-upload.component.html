@@ -1,0 +1,33 @@
+<div class="container file-upload"
+  [ngClass]="{'err': ((((submitted$ | async)===true) || ((invalid$ | async)===true)) && options?.isRequired)}" dnd
+  (filesChangeEmiter)="fileEvent($event)" [allowed_extensions]="options?.allowedExtensions">
+
+
+  <div class="progress-container">
+
+    <p>License document <span style='float:right;' *ngIf="(progress$ | async) as progress">
+        {{progress?.percentage +"%" }}
+      </span>
+
+    </p>
+
+    <div class="progress">
+      <div class="progress-bar bg-success" *ngIf="(progress$ | async) as progress" role="progressbar"
+        [ngStyle]="{'width':progress?.percentage}" aria-valuemin="0" aria-valuemax="100">
+
+      </div>
+
+    </div>
+
+    <p>File name: <span style='float:right'>{{''}}</span></p>
+
+  </div>
+  <div (click)="fileInput.click()">
+    <input style="display: none" type="file" onclick="this.value = null" (change)="fileEvent($event)" #fileInput
+      [accept]="extensionsWithDots">
+    <i ngbtooltip="fa fa-cloud-upload" class="fa fa-cloud-upload upload-icon "></i>
+    <!--   <fa-icon icon="file-upload" size="3x" transform="down-6 right-4"></fa-icon> -->
+
+  </div>
+
+</div>

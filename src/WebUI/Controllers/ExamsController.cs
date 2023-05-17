@@ -1,19 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WeCare.Application.Common.Models;
 using WeCare.Application.Exams.Commands.CreateExam;
 using WeCare.Application.Exams.Commands.DeleteCourse;
 using WeCare.Application.Exams.Commands.UpdateExam;
 using WeCare.Application.Exams.Dto;
 using WeCare.Application.Exams.Queries.GetExam;
+using WeCare.Application.Exams.Queries.GetExams;
 
 namespace WeCare.WebUI.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class ExamsController : ApiControllerBase
 {
-    [HttpGet()]
+    [HttpGet("{name}")]
     public async Task<ActionResult<ExamDto>> GetExam(string name)
     {
         return await Mediator.Send(new GetExamQuery() { Name = name });
+    }
+
+    [HttpGet()]
+    public async Task<ActionResult<PaginatedList<ExamDto>>> GetExams([FromQuery] GetPaginationExamsQuery getExamsQuery)
+    {
+        return await Mediator.Send(getExamsQuery);
+    }
+
+    [HttpGet("List")]
+    public async Task<ActionResult<List<ExamDto>>> GetExams()
+    {
+        var getExamsQuery = new GetExamsQuery();
+
+        return await Mediator.Send(getExamsQuery);
     }
 
     [HttpGet("{id}")]
@@ -23,7 +40,7 @@ public class ExamsController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> CreateExam(CreateExamsCommand createExamCommand)
+    public async Task<ActionResult<int>> CreateExam(CreateExamCommand createExamCommand)
     {
         return await Mediator.Send(createExamCommand);
     }

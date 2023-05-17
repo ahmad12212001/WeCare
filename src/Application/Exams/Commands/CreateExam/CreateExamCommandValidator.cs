@@ -7,7 +7,7 @@ using FluentValidation;
 using Microsoft.VisualBasic;
 
 namespace WeCare.Application.Exams.Commands.CreateExam;
-public class CreateExamValiditior : AbstractValidator<CreateExamsCommand>
+public class CreateExamValiditior : AbstractValidator<CreateExamCommand>
 {
     public CreateExamValiditior()
     {

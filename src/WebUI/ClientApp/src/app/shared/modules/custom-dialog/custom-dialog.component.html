@@ -1,0 +1,16 @@
+<div class="px-5">
+  <div class="modal-header mt-3 pb-2">
+    <div class="row">
+      <h6 class="col-12 p-0 modal-subtitle color-primary text-uppercase mb-0" *ngIf="title">{{title}}</h6>
+      <h5 class="col-12 p-0 modal-title font-weight-bolder" *ngIf="subTitle">{{subTitle}}</h5>
+    </div>
+
+    <button type="button" class="close pt-2 pr-0" (click)="close()">
+      <span class="close-icon">+</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ng-container *ngTemplateOutlet="bodyTemplate">
+    </ng-container>
+  </div>
+</div>

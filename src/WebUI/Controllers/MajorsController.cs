@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeCare.Application.Common.Models;
-using WeCare.Application.Courses.Commands.DeleteCourse;
 using WeCare.Application.Majors.Commands.CreateMajors;
 using WeCare.Application.Majors.Commands.DeleteMajors;
 using WeCare.Application.Majors.Commands.UpdateMajors;

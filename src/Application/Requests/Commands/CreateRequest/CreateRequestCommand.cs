@@ -11,11 +11,11 @@ namespace WeCare.Application.Requests.Commands.CreateRequest;
 public record CreateRequestCommand : IRequest<int>
 {
     public DateTime DueDate { get; set; }
-    public RequestType RequestType { get; set; }
-
     public int? ExamId { get; set; }
 
+    public RequestType? RequestType { get; set; }
     public int CourseId { get; set; }
+    public string Description { get; set; } = null!;
 
 }
 
@@ -35,12 +35,15 @@ public class CreateRequestCommandHandler : IRequestHandler<CreateRequestCommand,
 
         var createdRequest = new Request
         {
-            DueDate = request.DueDate,
-            RequestType = request.RequestType,
+            DueDate = request.DueDate.ToUniversalTime(),
+            RequestType = request.ExamId.HasValue ? RequestType.Assistance : request.RequestType.HasValue ? request.RequestType.Value : RequestType.Assignment,
             DisabilityStudentId = student?.Id!,
             CourseId = request.CourseId,
-            ExamId = request.ExamId
+            ExamId = request.ExamId,
+            RequestStatus = RequestStatus.Created,
+            Description = request.Description
         };
+
         await _applicationDbContext.Requests.AddAsync(createdRequest);
 
         await _applicationDbContext.SaveChangesAsync(cancellationToken);

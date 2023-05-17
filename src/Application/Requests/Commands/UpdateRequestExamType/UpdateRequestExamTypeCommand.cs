@@ -22,7 +22,7 @@ public class UpdateRequestExamTypeCommandHandler : IRequestHandler<UpdateRequest
         _applicationDbContext = applicationDbContext;
         _currentUserService = currentUserService;
     }
-    public async Task<Unit> Handle(UpdateRequestExamTypeCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateRequestExamTypeCommand request, CancellationToken cancellationToken)
     {
         var currentRequest = (await _applicationDbContext.Requests.FindAsync(request.RequestId))!;
 
@@ -35,7 +35,7 @@ public class UpdateRequestExamTypeCommandHandler : IRequestHandler<UpdateRequest
         _applicationDbContext.Requests.Update(currentRequest);
 
         await _applicationDbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
+
+
 }

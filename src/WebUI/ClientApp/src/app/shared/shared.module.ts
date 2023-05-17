@@ -25,6 +25,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { CloseSwitcherDirective } from './directives/close-switcher.directive';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DirectivesModule } from './directives';
+import { AlertModule } from './modules/alert/alert.module';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -58,7 +59,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
     ReactiveFormsModule,
     ColorPickerModule,
-    DirectivesModule
+    DirectivesModule,
+    AlertModule
   ],
   providers: [
     {
@@ -75,7 +77,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LoaderComponent,
     NgbModule,
     ReactiveFormsModule,
-    DirectivesModule
+    DirectivesModule,
+    AlertModule
   ]
 })
 export class SharedModule { }

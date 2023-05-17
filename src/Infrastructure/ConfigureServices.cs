@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minio.AspNetCore;
 using WeCare.Application.Common.Interfaces;
 using WeCare.Domain.Entities;
 using WeCare.Infrastructure.Extensions;
-using WeCare.Infrastructure.Files;
 using WeCare.Infrastructure.Identity;
 using WeCare.Infrastructure.Persistence;
 using WeCare.Infrastructure.Persistence.Interceptors;
@@ -20,7 +20,7 @@ public static class ConfigureServices
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
+            options.UseLazyLoadingProxies().UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
                 builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
@@ -46,7 +46,6 @@ public static class ConfigureServices
 
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IIdentityService, IdentityService>();
-        services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
         services.AddSingleton<IPasswordGenerator, PasswordGenerator>();
 
@@ -65,6 +64,10 @@ public static class ConfigureServices
 
         services.AddAuthorization(options =>
                 options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
+
+        services.AddMinio(new Uri($"s3://{configuration["Bucket:AccessKey"]}:{configuration["Bucket:SecretKey"]}@{configuration["Bucket:EndPoint"]}/"));
+
+        services.AddScoped<IBlobStorageService, BlobStorageService>();
 
         return services;
     }

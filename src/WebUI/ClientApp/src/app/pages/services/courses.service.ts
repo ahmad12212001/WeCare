@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environment/environment';
 import { Observable } from 'rxjs';
 import { Course } from '../models/course';
+import { PaginatedList } from '../../shared/models/paginated-list';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +15,37 @@ export class CoursesService {
   constructor(private _http: HttpClient) { }
 
   getCourses(): Observable<Course[]> {
-    return this._http.get<Course[]>(`${this.apiUrl}courses`);
+    return this._http.get<Course[]>(`${this.apiUrl}courses/list`);
   }
 
   getAcacdemicStaffCourses(): Observable<Course[]> {
     return this._http.get<Course[]>(`${this.apiUrl}courses/academic`);
+  }
+  
+  getCoursePagination(pageNumber: number, pageSize: number, name: string = ''): Observable<PaginatedList<Course>> {
+    return this._http.get<PaginatedList<Course>>(`${this.apiUrl}courses`, {
+      params: {
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+        name: name
+      }
+    });
+  }
+
+  createCourse(course: Course) {
+    return this._http.post(`${this.apiUrl}courses`, course);
+  }
+
+  updateCourse(id: number, course: Course) {
+    return this._http.put(`${this.apiUrl}courses/${id}`, course);
+  }
+
+  getCourse(id: number): Observable<Course> {
+    return this._http.get<Course>(`${this.apiUrl}courses/${id}`);
+  }
+
+  delteteCourse(id: number): Observable<string> {
+    return this._http.delete<string>(`${this.apiUrl}courses/${id}`);
   }
 
 }

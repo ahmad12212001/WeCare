@@ -10,7 +10,7 @@ namespace WeCare.Application.Courses.Commands.UpdateCourse;
 [Authorize(Roles = "AcademicStaff")]
 public record UpdateCourseCommand : IRequest<CourseDto>
 {
-    public int CourseId { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; } = null!;
 }
 
@@ -26,7 +26,7 @@ public class UpdateCourseCommandHandler : IRequestHandler<UpdateCourseCommand, C
     public async Task<CourseDto> Handle(UpdateCourseCommand request, CancellationToken cancellationToken)
     {
 
-        var course = (await _context.Courses.FindAsync(request.CourseId))!;
+        var course = (await _context.Courses.FindAsync(request.Id))!;
         course.Name = request.Name;
         _context.Courses.Update(course);
         await _context.SaveChangesAsync(cancellationToken);

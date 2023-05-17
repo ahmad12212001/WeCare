@@ -25,20 +25,8 @@
             <label for="dueDate"></label>
             <input type="date" class="form-control" placeholder="Dute Date" formControlName="dueDate">
           </div>
-          <!-- <div class="col-lg-6 col-md-12 form-group">
-            <label for="dueDate"></label>
-            <div class="input-group">
-              <div class="input-group-text">
-                <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
-              </div>
-              <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="dueDate" ngbDatepicker
-                (click)="d.toggle()" #d="ngbDatepicker" autocomplete="off">
-            </div>
-            <div class="err-msg">DueDate is Required</div>
-          </div> -->
           <div class="col-md-6 col-sm-12">
-            <drop-down [options]="courses" formControlName="courseId" [label]="'Courses'" [id]="'courseId'"
-              [placeholder]="'Select Course'">
+            <drop-down [options]="courses" formControlName="courseId" [id]="'courseId'" [placeholder]="'Select Course'">
             </drop-down>
           </div>
         </div>

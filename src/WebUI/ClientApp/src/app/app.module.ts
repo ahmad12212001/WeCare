@@ -17,13 +17,11 @@ import { ApiAuthorizationModule } from '../api-authorization/api-authorization.m
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
-    BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
     ApiAuthorizationModule,
     ReactiveFormsModule,
-    AppRoutingModule,
     ModalModule.forRoot()
   ],
   providers: [

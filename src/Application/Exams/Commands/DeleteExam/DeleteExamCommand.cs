@@ -23,6 +23,7 @@ public class DeleteExamCommandHandler : IRequestHandler<DeleteExamCommand, int> 
     public async Task<int> Handle(DeleteExamCommand request, CancellationToken cancellationToken) 
     {
         var exam = (await _context.Exams.FindAsync(request.Id))!;
+        _context.Exams.Remove(exam);
         await _context.SaveChangesAsync(cancellationToken);
         return exam.Id;
     }

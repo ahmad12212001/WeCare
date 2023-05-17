@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using WeCare.Application.Common.Models;
-using WeCare.Application.Courses.Commands.CreateCourse;
-using WeCare.Application.Courses.Commands.DeleteCourse;
-using WeCare.Application.Courses.Commands.UpdateCourse;
-using WeCare.Application.Courses.Dtos;
-using WeCare.Application.Courses.Queries.GetCourse;
-using WeCare.Application.Courses.Queries.GetCourses;
+﻿using Microsoft.AspNetCore.Mvc;
 using WeCare.Application.Students.Commands.CreateStudent;
 using WeCare.Application.Students.Queries;
 using WeCare.Application.Students.StudentDto;

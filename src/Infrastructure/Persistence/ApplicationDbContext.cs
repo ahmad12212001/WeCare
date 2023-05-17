@@ -15,25 +15,18 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
     public DbSet<Course> Courses => Set<Course>();
-
-    public DbSet<Document> Documents => Set<Document>();
-
+    public DbSet<Job> Jobs => Set<Job>();
     public DbSet<Exam> Exams => Set<Exam>();
-
     public DbSet<Major> Majors => Set<Major>();
-
     public DbSet<Material> Materials => Set<Material>();
-
     public DbSet<Request> Requests => Set<Request>();
-
     public DbSet<RequestFeedBack> RequestFeedBacks => Set<RequestFeedBack>();
-
     public DbSet<RequestVolunteer> RequestVolunteers => Set<RequestVolunteer>();
-
     public DbSet<Student> Students => Set<Student>();
     public DbSet<DisabilityStudent> DisabilityStudents => Set<DisabilityStudent>();
     public DbSet<VolunteerStudent> VolunteerStudents => Set<VolunteerStudent>();
     public DbSet<StudentCourse> StudentCourses => Set<StudentCourse>();
+    public DbSet<MajorGroup> MajorGroups => Set<MajorGroup>();
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,

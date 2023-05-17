@@ -4,5 +4,5 @@ namespace WeCare.Application.Common.Interfaces;
 public interface IEmailService
 {
 
-    Task SendEmail(EmailMessage message);
+    Task SendEmailAsync(EmailMessage message);
 }

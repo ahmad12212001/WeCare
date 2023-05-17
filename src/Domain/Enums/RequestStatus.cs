@@ -1,9 +1,9 @@
 ﻿namespace WeCare.Domain.Enums;
 public enum RequestStatus
 {
-    Created = 0,
-    Accepted = 1,
-    AcceptedByVolunteer = 2,
-    ReAssigning = 4,
-    Done = 8
+    Created = 1,
+    Accepted = 2,
+    AcceptedByVolunteer = 4,
+    ReAssigning = 8,
+    Done = 16
 }

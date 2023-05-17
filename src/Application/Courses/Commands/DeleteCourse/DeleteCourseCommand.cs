@@ -6,23 +6,23 @@ using WeCare.Application.Common.Security;
 namespace WeCare.Application.Courses.Commands.DeleteCourse;
 
 [Authorize(Roles = "AcademicStaff")]
-public record DeleteCourseCommand : IRequest<string>
+public record DeleteCourseCommand : IRequest<int>
 {
     public int CourseId { get; set; }
 }
 
-public class DeleteCourseCommandHandler : IRequestHandler<DeleteCourseCommand, string>
+public class DeleteCourseCommandHandler : IRequestHandler<DeleteCourseCommand, int>
 {
     private readonly IApplicationDbContext _context;
     public DeleteCourseCommandHandler(IApplicationDbContext applicationDbContext)
     {
         _context = applicationDbContext;
     }
-    public async Task<string> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
     {
         var course = (await _context.Courses.FindAsync(request.CourseId))!;
         _context.Courses.Remove(course);
         await _context.SaveChangesAsync(cancellationToken);
-        return course.Name;
+        return course.Id;
     }
 }
