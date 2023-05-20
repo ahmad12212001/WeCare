@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,7 +44,9 @@ public static class ConfigureServices
             };
         });
 
-        services.AddIdentityServer()
+
+        services.AddScoped<IProfileService, CustomProfileService>();
+        services.AddIdentityServer().AddProfileService<CustomProfileService>()
             .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
         services.AddTransient<IDateTime, DateTimeService>();
@@ -72,3 +77,4 @@ public static class ConfigureServices
         return services;
     }
 }
+

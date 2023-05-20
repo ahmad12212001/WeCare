@@ -20,7 +20,11 @@ export const routes: Routes = [
       },
       {
         path: 'requests',
-        loadChildren: () => import('../app/pages/disability-student-pages/requests/requests.module').then(m => m.RequestsModule)
+        loadChildren: () => import('../app/pages/shared-pages/requests/requests.module').then(m => m.RequestsModule)
+      },
+      {
+        path: 'materials',
+        loadChildren: () => import('../app/pages/shared-pages/materials/materials.module').then(m => m.MaterialsModule)
       },
       { path: '', redirectTo: 'exams', pathMatch: 'full' }
     ]

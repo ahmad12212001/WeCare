@@ -3,6 +3,8 @@ import { User, UserManager } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { ApplicationPaths, ApplicationName } from './api-authorization.constants';
+import { environment } from '@environment/environment';
+import { HttpClient } from '@angular/common/http';
 
 export type IAuthenticationResult =
   SuccessAuthenticationResult |
@@ -33,6 +35,11 @@ export interface IUser {
   name?: string;
 }
 
+export interface UserInfo {
+  username: string,
+  role: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -43,6 +50,11 @@ export class AuthorizeService {
   private popUpDisabled = true;
   private userManager?: UserManager;
   private userSubject: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(null);
+  private apiUrl: string = environment.apiUrl;
+  /**
+   *
+   */
+  constructor(private _httpClient: HttpClient) { }
 
   public isAuthenticated(): Observable<boolean> {
     return this.getUser().pipe(map(u => !!u));
@@ -58,6 +70,12 @@ export class AuthorizeService {
       this.getUserFromStorage().pipe(filter(u => !!u), tap(u => this.userSubject.next(u))),
       this.userSubject.asObservable());
   }
+
+  public getUserInfo(): Observable<UserInfo | null> {
+    return this._httpClient.get<UserInfo | null>(`${this.apiUrl}users/userinfo`);
+  }
+
+
 
   public getAccessToken(): Observable<string | null> {
     return from(this.ensureUserManagerInitialized())

@@ -26,6 +26,7 @@ import { CloseSwitcherDirective } from './directives/close-switcher.directive';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DirectivesModule } from './directives';
 import { AlertModule } from './modules/alert/alert.module';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -78,7 +79,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
     ReactiveFormsModule,
     DirectivesModule,
-    AlertModule
+    AlertModule,
+    NgxPermissionsModule
+
   ]
 })
 export class SharedModule { }

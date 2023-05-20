@@ -32,6 +32,9 @@
       ],
       "@app/*": [
         "src/app/*"
+      ],
+      "@authorize/*":[
+        "src/api-authorization/*"
       ]
     }
   },

@@ -3,6 +3,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation, 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { FileUploadOptions } from './file-upload-options';
+import { ActionControl } from '@shared/models/action-control';
 
 @Component({
   selector: 'file-upload',
@@ -26,13 +27,18 @@ export class FileUploadComponent implements ControlValueAccessor, OnChanges {
   invalid$ = new Subject<boolean | null>();
   @Input() options: FileUploadOptions;
   extensionsWithDots: string[];
-  name = 'Angular';
-  @Input() progress$: Observable<{ percentage: string }>;
+  fileName: string;
+
 
   constructor() { }
 
   ngOnChanges(): void {
-    this.extensionsWithDots = [...this.options.allowedExtensions, ...allExtensions].map(e => '.' + e);
+    if (this.options?.allowedExtensions) {
+      this.extensionsWithDots = [...this.options?.allowedExtensions, ...allExtensions].map(e => '.' + e);
+    } else {
+      this.extensionsWithDots = allExtensions.map(e => '.' + e);
+    }
+
   }
 
   writeValue(value: any): void {
@@ -101,6 +107,7 @@ export class FileUploadComponent implements ControlValueAccessor, OnChanges {
   }
   addFiles(file: File): void {
     this.value = file;
+    this.fileName = file.name;
     this.onChange(this.value);
   }
 

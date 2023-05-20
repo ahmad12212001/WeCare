@@ -5,11 +5,12 @@ import { Request } from '../models/request';
 import { Observable } from 'rxjs';
 import { PaginatedList } from '../../shared/models/paginated-list';
 import { RequestDto } from '../models/request-dtos';
+import { RequestFeedback } from '../models/request-feedback';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RequestService {
+export class RequestsService {
 
   private apiUrl: string = environment.apiUrl;
 
@@ -35,6 +36,14 @@ export class RequestService {
         name: name
       }
     });
+  }
+
+  acceptRequest(request: RequestDto) {
+    return this._http.post<number>(`${this.apiUrl}requestVolunteers`, { requestId: request.id });
+  }
+
+  addRequestFeedback(requestFeedback: RequestFeedback) {
+    return this._http.post<number>(`${this.apiUrl}requestfeedbacks`, requestFeedback);
   }
 
 }

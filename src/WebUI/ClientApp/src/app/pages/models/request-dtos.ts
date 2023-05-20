@@ -1,11 +1,13 @@
 export interface RequestDto {
     courseName: string;
     id: number;
-    examName: string | null;
+    examName?: string;
     requestType: string;
     requestStatus: string;
     dueDate: string;
-    materialName: string | null;
-    volunteerName: string | null;
+    materialName?: string;
+    studentName?: string;
     description: string;
+    hasRequested: boolean;
+    hasFeedback: boolean;
 }

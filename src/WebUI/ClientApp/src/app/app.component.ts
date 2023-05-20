@@ -8,8 +8,7 @@ import { fromEvent } from 'rxjs';
 export class AppComponent {
   title = 'app';
   ngOnInit() {
-    fromEvent(window, 'load').subscribe(() =>
-     document.querySelector('#glb-loader')?.classList.remove('loaderShow'));
+ 
   }
 
   materialDualListSource: any[] = []

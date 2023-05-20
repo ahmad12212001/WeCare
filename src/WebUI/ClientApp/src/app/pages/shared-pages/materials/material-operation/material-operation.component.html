@@ -1,0 +1,42 @@
+<app-header-breadcrumb [title]="'Create Material'" [items]="['Academic-Pages']"
+  [active_item]="'Create Material'"></app-header-breadcrumb>
+
+<div class="row">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Materials</h3>
+    </div>
+    <form [formGroup]="materialForm" (submit)="onSubmit()" validation [form]="materialForm"
+      [submitted]="(submitted$ | async) || false">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-4 col-md-12 form-group">
+            <label for="name"></label>
+            <input type="text" class="form-control" placeholder="Name" formControlName="name">
+          </div>
+          <div class="col-lg-4 col-md-12 form-group">
+            <label for="description"></label>
+            <input type="text" class="form-control" placeholder="Description" formControlName="description">
+          </div>
+          <div class="col-md-4 col-sm-12">
+            <drop-down [options]="courses$ | async" formControlName="course" [id]="'courses'"
+              [placeholder]="'Select Course'">
+            </drop-down>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 col-sm-12">
+            <div class="row">
+              <file-upload formControlName="file" [options]="options" [submitted$]="submitted$"></file-upload>
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer text-end">
+          <button type="Submit" class="btn btn-success mt-1 me-2">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

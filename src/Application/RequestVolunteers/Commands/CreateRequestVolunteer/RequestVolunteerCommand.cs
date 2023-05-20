@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WeCare.Application.Common.Interfaces;
 using WeCare.Domain.Entities;
+using WeCare.Domain.Enums;
 
 namespace WeCare.Application.RequestVolunteers.Commands.CreateRequestVolunteer;
 public record RequestVolunteerCommand : IRequest<int>
@@ -25,13 +26,20 @@ public class RequestVolunteerCommandHandler : IRequestHandler<RequestVolunteerCo
 
         var student = await _applicationDbContext.VolunteerStudents.SingleAsync(s => s.UserId == _currentUserService.UserId!);
 
+        var currentRequest = (await _applicationDbContext.Requests.FindAsync(request.RequestId))!;
+
+        currentRequest.RequestStatus = RequestStatus.Accepted;
+
+
         var requestVolunteer = new RequestVolunteer
         {
             VolunteerStudentId = student.Id,
             RequestId = request.RequestId,
         };
 
-      await  _applicationDbContext.RequestVolunteers.AddAsync(requestVolunteer);
+        await _applicationDbContext.RequestVolunteers.AddAsync(requestVolunteer);
+
+        _applicationDbContext.Requests.Update(currentRequest);
 
         await _applicationDbContext.SaveChangesAsync(cancellationToken);
 

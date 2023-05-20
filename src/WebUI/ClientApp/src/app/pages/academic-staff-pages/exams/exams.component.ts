@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
-import { ExamService } from '@app/pages/services/exam.service';
+import { ExamsService } from '@app/pages/services/exams.service';
 import { PaginatedList } from '@shared/models/paginated-list';
 import { Exam } from '@app/pages/models/exam';
 import { FormControl } from '@angular/forms';
@@ -28,7 +28,7 @@ export class ExamsComponent extends FormBase implements OnInit {
   name = new FormControl('');
   ColumnMode = ColumnMode;
 
-  constructor(private _examService: ExamService, private _alertService: AlertService) {
+  constructor(private _ExamsService: ExamsService, private _alertService: AlertService) {
     super();
   }
 
@@ -47,7 +47,7 @@ export class ExamsComponent extends FormBase implements OnInit {
   }
 
   getExamPagination() {
-    this._examService.getExamsPagination(this.pageNumber, this.pageSize, this.name.value).subscribe(pagedData => {
+    this._ExamsService.getExamsPagination(this.pageNumber, this.pageSize, this.name.value).subscribe(pagedData => {
       this.rows = pagedData
     });
   }
@@ -65,7 +65,7 @@ export class ExamsComponent extends FormBase implements OnInit {
     );
     this._alertService.submitAction$.pipe(takeUntil(this.onDestroy$)).subscribe(res => {
       if (res) {
-        this._examService.deleteExam(id).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        this._ExamsService.deleteExam(id).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
           if (res) {
             this.getExamPagination();
           }

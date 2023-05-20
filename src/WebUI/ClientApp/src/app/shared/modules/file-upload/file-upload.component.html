@@ -5,21 +5,21 @@
 
   <div class="progress-container">
 
-    <p>License document <span style='float:right;' *ngIf="(progress$ | async) as progress">
-        {{progress?.percentage +"%" }}
+    <p>License document <span style='float:right;' *ngIf="(options?.progress$?.value | async) as progress">
+        {{progress }}
       </span>
 
     </p>
 
     <div class="progress">
-      <div class="progress-bar bg-success" *ngIf="(progress$ | async) as progress" role="progressbar"
-        [ngStyle]="{'width':progress?.percentage}" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-bar bg-success" *ngIf="(options.progress$?.value | async) as progress" role="progressbar"
+        [ngStyle]="{'width':progress}" aria-valuemin="0" aria-valuemax="100">
 
       </div>
 
     </div>
 
-    <p>File name: <span style='float:right'>{{''}}</span></p>
+    <p>File name: <span>{{fileName}}</span></p>
 
   </div>
   <div (click)="fileInput.click()">

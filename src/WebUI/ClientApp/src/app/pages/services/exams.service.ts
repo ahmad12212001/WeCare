@@ -8,7 +8,7 @@ import { PaginatedList } from '../../shared/models/paginated-list';
 @Injectable({
   providedIn: 'root'
 })
-export class ExamService {
+export class ExamsService {
 
   private apiUrl: string = environment.apiUrl;
 

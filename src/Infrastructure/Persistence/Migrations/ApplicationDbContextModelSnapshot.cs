@@ -705,11 +705,16 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("SubmitedByStudentId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RequestId");
 
                     b.HasIndex("StudentId");
+
+                    b.HasIndex("SubmitedByStudentId");
 
                     b.ToTable("RequestFeedBacks");
                 });
@@ -990,9 +995,17 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WeCare.Domain.Entities.Student", "SubmitedByStudent")
+                        .WithMany()
+                        .HasForeignKey("SubmitedByStudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Request");
 
                     b.Navigation("Student");
+
+                    b.Navigation("SubmitedByStudent");
                 });
 
             modelBuilder.Entity("WeCare.Domain.Entities.RequestVolunteer", b =>

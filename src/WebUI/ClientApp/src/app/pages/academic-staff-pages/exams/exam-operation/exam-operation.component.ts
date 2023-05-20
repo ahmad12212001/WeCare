@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router';
 import { Exam } from '@app/pages/models/exam';
 import { CoursesService } from '@app/pages/services/courses.service';
-import { ExamService } from '@app/pages/services/exam.service';
+import { ExamsService } from '@app/pages/services/exams.service';
 import { FormBase } from '@shared/models/form-base'
 import { Option } from '@shared/models/option';
 import { map, takeUntil } from 'rxjs';
@@ -19,7 +19,7 @@ export class ExamOperationComponent extends FormBase implements OnInit {
   courses: Option[] = [];
 
   constructor(private _fb: FormBuilder,
-    private _examService: ExamService,
+    private _ExamsService: ExamsService,
     private _courseService: CoursesService,
     private route: ActivatedRoute) {
     super();
@@ -39,7 +39,7 @@ export class ExamOperationComponent extends FormBase implements OnInit {
       this.courses = res;
       const id = this.route.snapshot.params.id;
       if (id && id > 0) {
-        this._examService.getExam(id).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        this._ExamsService.getExam(id).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
           this.examForm.setValue({
             id: res.id,
             hallNo: res.hallNo,
@@ -84,11 +84,11 @@ export class ExamOperationComponent extends FormBase implements OnInit {
     }
 
     if (exam.id) {
-      this._examService.updateExam(exam).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+      this._ExamsService.updateExam(exam).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
         debugger
       })
     } else {
-      this._examService.createExam(exam).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+      this._ExamsService.createExam(exam).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
         debugger
       })
     }

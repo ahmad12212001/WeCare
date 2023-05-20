@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Request } from '@app/pages/models/request';
 import { CoursesService } from '@app/pages/services/courses.service';
-import { ExamService } from '@app/pages/services/exam.service';
-import { RequestService } from '@app/pages/services/request.service';
+import { ExamsService } from '@app/pages/services/exams.service';
+import { RequestsService } from '@app/pages/services/requests.service';
 import { requiredWhenIsNull } from '@shared/custom-validatiors/required-when';
 import { FormBase } from '@shared/models/form-base';
 import { Option } from '@shared/models/option';
@@ -23,8 +23,8 @@ export class RequestOperationComponent extends FormBase implements OnInit {
 
 
   constructor(private _fb: FormBuilder,
-    private _requestService: RequestService,
-    private _examService: ExamService,
+    private _RequestsService: RequestsService,
+    private _ExamsService: ExamsService,
     private _courseService: CoursesService) {
     super();
   }
@@ -32,7 +32,7 @@ export class RequestOperationComponent extends FormBase implements OnInit {
   ngOnInit() {
     this.createCourseForm();
 
-    this.exams$ = this._examService.getExams().pipe(map(i => {
+    this.exams$ = this._ExamsService.getExams().pipe(map(i => {
       return i.map(x => {
         return {
           id: x.id,
@@ -83,7 +83,7 @@ export class RequestOperationComponent extends FormBase implements OnInit {
       description: this.requestForm.value.description
     };
 
-    this._requestService.createRequest(request).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    this._RequestsService.createRequest(request).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
       debugger
     })
 

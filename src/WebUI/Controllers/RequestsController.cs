@@ -17,7 +17,7 @@ public class RequestsController : ApiControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<RequestDto>>> Get([FromQuery] GetDisabilityStudentRequestsPaginationQuery getRequestQuery)
+    public async Task<ActionResult<PaginatedList<RequestDto>>> Get([FromQuery] GetRequestsPaginationQuery getRequestQuery)
     {
         return await Mediator.Send(getRequestQuery);
     }
