@@ -32,7 +32,7 @@ public class GetRequestVolunteerQueryHandler : IRequestHandler<GetRequestVolunte
                 Id = request.VolunteerStudent.Id,
                 Major = request.VolunteerStudent.Major.Name,
                 Name = $"{request.VolunteerStudent.User.FirstName} {request.VolunteerStudent.User.LastName}",
-                Rating = request.VolunteerStudent.Rate ?? 0
+                Rating = request.VolunteerStudent.Rate
 
             }).PaginatedListAsync(request.PageNumber, request.PageSize);
     }

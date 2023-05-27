@@ -27,4 +27,8 @@ export class MaterialDialogComponent extends FormBase implements OnInit {
     });
   }
 
+  close() {
+    this.closeDialog$.next(true);
+  }
+
 }

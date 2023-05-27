@@ -36,7 +36,10 @@
 
                             <div class="card-options">
                                 <a class="btn btn-primary btn-sm white-color">{{request?.requestType}}</a>
-                                <a class="btn btn-secondary btn-sm ms-2 white-color">{{request?.requestStatus}}</a>
+                                <a class="btn  btn-sm ms-2 white-color" [ngClass]="{'btn-warning': request?.requestStatus == 'Created',
+                                'btn-secondary': request?.requestStatus =='Accepted',
+                                'btn-success': request?.requestStatus =='AcceptedByVolunteer',
+                                'btn-info':request?.requestStatus == 'ReAssigning'}">{{request?.requestStatus}}</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -82,8 +85,12 @@
 
                                 <ng-template [ngxPermissionsOnly]="['AcademicStaff','DeanOffice']">
                                     <a class="social-profile me-4 rounded text-center" *ngIf="request?.hasFeedback"
-                                        (click)="openFeedbackDialog(request)"><i class="fa fa-comments"
+                                        (click)="openReviewDialog(request)"><i class="fa fa-comments"
                                             ngbTooltip="Feedback" aria-hidden="true"></i></a> </ng-template>
+                                <ng-template [ngxPermissionsOnly]="['VolunteerStudent']">
+                                    <a class="social-profile me-4 rounded text-center" *ngIf="request?.hasRequested"
+                                        [routerLink]="['/materials/operation',request?.id]"><i class="fa fa-upload"
+                                            ngbTooltip="Upload Material" aria-hidden="true"></i></a> </ng-template>
                                 <a class="social-profile me-4 rounded text-center"
                                     (click)="openMaterialsDialog(request)"><i class="fa fa-file" ngbTooltip="Documents"
                                         aria-hidden="true"></i></a>
@@ -98,6 +105,7 @@
                             </ng-container>
                         </div>
                     </div>
+
                 </div>
                 <div class="mb-5">
                     <ngb-pagination class="float-end" [collectionSize]="rows?.totalCount" [(page)]="pageNumber"

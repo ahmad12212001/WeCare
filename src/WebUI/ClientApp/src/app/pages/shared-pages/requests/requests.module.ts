@@ -8,6 +8,7 @@ import { DropDownModule } from '@shared/modules/drop-down/drop-down.module';
 import { UserListTableModule } from '@shared/user-list-table/user-list-table.module';
 import { FeedBackModule } from '@shared/modules/feed-back/feed-back.module';
 import { MaterialDialogModule } from '../materials/material-dialog/material-dialog.module';
+import { ReviewsModule } from '@shared/modules/reviews/reviews.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { MaterialDialogModule } from '../materials/material-dialog/material-dial
     DropDownModule,
     UserListTableModule,
     FeedBackModule,
-    MaterialDialogModule
+    MaterialDialogModule,
+    ReviewsModule
   ],
   declarations: [RequestsComponent, RequestOperationComponent]
 })

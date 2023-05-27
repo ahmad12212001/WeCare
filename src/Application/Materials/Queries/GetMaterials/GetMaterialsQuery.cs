@@ -61,7 +61,7 @@ public class GetMaterialsQueryHandler : IRequestHandler<GetMaterialsQuery, Pagin
                 ContentType = m.ContentType,
                 CourseId = m.CourseId,
                 Description = m.Description,
-                MaterialStatus = m.MaterialStatus,
+                MaterialStatus = m.MaterialStatus.ToString(),
                 Name = m.Name,
                 Path = m.Path,
                 RequestId = m.RequestId,
@@ -74,14 +74,14 @@ public class GetMaterialsQueryHandler : IRequestHandler<GetMaterialsQuery, Pagin
 
     private async Task<PaginatedList<MaterialDto>> GetMaterials(GetMaterialsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Materials.Where(m => m.Course.UserId == _currentUserService.UserId!)
+        return await _context.Materials.Where(m => m.Course.UserId == _currentUserService.UserId! && m.MaterialStatus != MaterialStatus.Rejected)
            .Select(m => new MaterialDto
            {
                Id = m.Id,
                ContentType = m.ContentType,
                CourseId = m.CourseId,
                Description = m.Description,
-               MaterialStatus = m.MaterialStatus,
+               MaterialStatus = m.MaterialStatus.ToString(),
                Name = m.Name,
                Path = m.Path,
                RequestId = m.RequestId,

@@ -11,6 +11,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UserListTableComponent } from '@shared/user-list-table/user-list-table.component';
 import { FeedBackComponent } from '@shared/modules/feed-back/feed-back.component';
 import { MaterialDialogComponent } from '../materials/material-dialog/material-dialog.component';
+import { ReviewsComponent } from '@shared/modules/reviews/reviews.component';
 
 @Component({
   selector: 'app-requests',
@@ -59,6 +60,9 @@ export class RequestsComponent extends FormBase implements OnInit {
     });
     const componentInstance: MaterialDialogComponent = this.modalRef.componentInstance;
     componentInstance.requestId = request.id;
+    componentInstance.closeDialog$.asObservable().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+      this.modalRef.dismiss();
+    })
 
   }
 
@@ -119,6 +123,24 @@ export class RequestsComponent extends FormBase implements OnInit {
         this.modalRef.dismiss()
       }
     })
+  }
+
+  openReviewDialog(request: RequestDto) {
+    this._requestsService.getRequestFeedbacks(request).pipe(takeUntil(this.onDestroy$)).subscribe(reviews => {
+      this.modalRef = this.modalService.open(ReviewsComponent, {
+        windowClass: "animated fadeInDown",
+        size: 'lg',
+        centered: true
+      });
+      const componentInstance: ReviewsComponent = this.modalRef.componentInstance;
+      componentInstance.reviews = reviews;
+      componentInstance.closeDialog$.asObservable().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+
+        this.modalRef.dismiss()
+
+      })
+    })
+
   }
 
   acceptRequest(request: RequestDto) {

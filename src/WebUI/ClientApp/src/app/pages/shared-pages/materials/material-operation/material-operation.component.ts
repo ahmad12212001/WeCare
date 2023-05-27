@@ -77,7 +77,7 @@ export class MaterialOperationComponent extends FormBase implements OnInit {
 
     this._materialService.createMaterial(material).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
       if (res.type === HttpEventType.UploadProgress) {
-        this.options.progress$.value = (Math.round(100 * res.loaded / res.total));
+        this.options.progress$.value = (Math.round(100 * res.loaded / res.total)) + "%";
       }
     })
   }

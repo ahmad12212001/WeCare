@@ -40,4 +40,11 @@ export class MaterialsService {
     })
   }
 
+  changeMaterialStatus(materialId: number, statusId: number) {
+    return this._http.put<boolean>(`${this.apiUrl}materials/updatestatus`, {
+      materialId: materialId,
+      materialStatus: statusId
+    })
+  }
+
 }

@@ -20,11 +20,19 @@
                   <div class="">
                     <h5 class="mb-0 fw-semibold text-break">{{material?.name}}</h5>
                   </div>
+
                   <div class="ms-auto my-auto">
                     <span class="text-muted mb-0"></span>
                   </div>
                 </div>
               </div>
+              <ng-container *ngxPermissionsOnly="['AcademicStaff']">
+
+                <div class="row mt-2" *ngIf="material?.materialStatus == 'Pending'">
+                  <a class="btn btn-success btn-sm white-color" (click)="approveMaterial(material,4)">Approve</a>
+                  <a class="btn btn-danger btn-sm white-color" (click)="rejectMaterial(material,2)">Reject</a>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -32,3 +40,8 @@
     </ngb-panel>
 
   </ngb-accordion>
+  <div class="mt-5">
+    <ngb-pagination class="float-end" [collectionSize]="materials?.totalCount" [(page)]="pageNumber"
+      [pageSize]="pageSize" (pageChange)="setPage($event)" aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

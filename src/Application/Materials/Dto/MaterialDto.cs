@@ -10,7 +10,7 @@ public class MaterialDto
     public string ContentType { get; set; } = null!;
     public int CourseId { get; set; }
     public string CourseName { get; set; } = null!;
-    public MaterialStatus MaterialStatus { get; set; }
+    public string MaterialStatus { get; set; } = null!;
     public int? RequestId { get; set; }
     public int? VolunteerStudentId { get; set; }
 }

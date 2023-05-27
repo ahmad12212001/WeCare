@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { PaginatedList } from '../../shared/models/paginated-list';
 import { RequestDto } from '../models/request-dtos';
 import { RequestFeedback } from '../models/request-feedback';
+import { Review } from '@shared/models/review';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class RequestsService {
       params: {
         pageNumber: pageNumber,
         pageSize: pageSize,
-        name: name
+        description: name
       }
     });
   }
@@ -44,6 +45,14 @@ export class RequestsService {
 
   addRequestFeedback(requestFeedback: RequestFeedback) {
     return this._http.post<number>(`${this.apiUrl}requestfeedbacks`, requestFeedback);
+  }
+
+  getRequestFeedbacks(request: RequestDto) {
+    return this._http.get<Review[]>(`${this.apiUrl}requestfeedbacks`, {
+      params: {
+        requestId: request.id
+      }
+    });
   }
 
 }

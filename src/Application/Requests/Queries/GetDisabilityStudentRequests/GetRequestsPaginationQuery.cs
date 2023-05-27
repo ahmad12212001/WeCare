@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WeCare.Application.Common.Interfaces;
 using WeCare.Application.Common.Mappings;
 using WeCare.Application.Common.Models;
-using WeCare.Application.Requests.Dto;
+using WeCare.Application.Requests.Dtos;
 using WeCare.Domain.Enums;
 
 namespace WeCare.Application.Requests.Queries.GetDisabilityStudentRequests;
@@ -12,6 +12,8 @@ public record GetRequestsPaginationQuery : IRequest<PaginatedList<RequestDto>>
 {
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
+
+    public string? Description { get; set; }
 }
 
 
@@ -49,7 +51,9 @@ public class GetRequestsPaginationQueryHandler : IRequestHandler<GetRequestsPagi
     private async Task<PaginatedList<RequestDto>> GetAcademicStaffRequestsAsync(GetRequestsPaginationQuery request)
     {
         return await _context.Requests
-          .Where(x => x.Course.UserId == _currentUserService.UserId!).OrderByDescending(i => i.DueDate)
+          .Where(x => x.Course.UserId == _currentUserService.UserId! &&
+          (!string.IsNullOrEmpty(request.Description) ? x.Description.ToLower().Contains(request.Description.ToLower()) : true)
+          ).OrderByDescending(i => i.DueDate)
           .Select(request => new RequestDto
           {
               CourseName = request.Course.Name,
@@ -69,7 +73,8 @@ public class GetRequestsPaginationQueryHandler : IRequestHandler<GetRequestsPagi
 
     private async Task<PaginatedList<RequestDto>> GetDeanOfficeRequestsAsync(GetRequestsPaginationQuery request)
     {
-        return await _context.Requests.OrderByDescending(i => i.DueDate)
+        return await _context.Requests.Where(x =>
+          (!string.IsNullOrEmpty(request.Description) ? x.Description.ToLower().Contains(request.Description.ToLower()) : true)).OrderByDescending(i => i.DueDate)
           .Select(request => new RequestDto
           {
               CourseName = request.Course.Name,
@@ -95,7 +100,8 @@ public class GetRequestsPaginationQueryHandler : IRequestHandler<GetRequestsPagi
         ((i.RequestType == RequestType.Material || i.RequestType == RequestType.Assignment) ?
           i.Course.MajorGroupId == student.Major.MajorGroupId : false) &&
           (i.AssignedVolunteerStudentId == null || i.AssignedVolunteerStudentId == student.Id) &&
-          (i.RequestStatus != RequestStatus.Done || (i.FeedBacks != null && i.FeedBacks.Any(f => f.StudentId == student.Id)))
+          (i.RequestStatus != RequestStatus.Done || (i.FeedBacks != null && i.FeedBacks.Any(f => f.StudentId == student.Id))) &&
+          (!string.IsNullOrEmpty(request.Description) ? i.Description.ToLower().Contains(request.Description.ToLower()) : true)
           ).OrderByDescending(i => i.DueDate)
           .Select(request => new RequestDto
           {
@@ -108,7 +114,7 @@ public class GetRequestsPaginationQueryHandler : IRequestHandler<GetRequestsPagi
               StudentName = ($"{request.DisabilityStudent.User.FirstName} {request.DisabilityStudent.User.LastName}"),
               Description = request.Description,
               HasRequested = request.Volunteers != null && request.Volunteers.Any(r => r.VolunteerStudentId == student.Id),
-              HasFeedback = request.FeedBacks != null && request.FeedBacks.Any(f=> f.SubmitedByStudentId == student.Id)
+              HasFeedback = request.FeedBacks != null && request.FeedBacks.Any(f => f.SubmitedByStudentId == student.Id)
           }).PaginatedListAsync(request.PageNumber, request.PageSize);
     }
 
@@ -119,7 +125,9 @@ public class GetRequestsPaginationQueryHandler : IRequestHandler<GetRequestsPagi
         return await _context.Requests
            .Where(x => x.DisabilityStudentId == student.Id &&
                    (x.RequestStatus != RequestStatus.Done ||
-                   (x.FeedBacks != null && x.FeedBacks.Any(f => f.StudentId == student.Id)))).OrderByDescending(i => i.DueDate)
+                   (x.FeedBacks != null && x.FeedBacks.Any(f => f.StudentId == student.Id))) &&
+                   (!string.IsNullOrEmpty(request.Description) ? x.Description.ToLower().Contains(request.Description.ToLower()) : true)
+                   ).OrderByDescending(i => i.DueDate)
            .Select(request => new RequestDto
            {
                CourseName = request.Course.Name,

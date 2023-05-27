@@ -20,13 +20,31 @@ public class EmailService : IEmailService
         await Send(emailMessage);
     }
 
+    public async Task SendEmailHtmlAsync(EmailMessage message)
+    {
+        var emailMessage = CreateEmailHtmlMessage(message);
+        await Send(emailMessage);
+    }
+
     private MimeMessage CreateEmailMessage(EmailMessage message)
     {
         var emailMessage = new MimeMessage();
         emailMessage.From.Add(new MailboxAddress(_configuration.FromName, _configuration.From));
-        emailMessage.To.AddRange(message.To.Select(x => new MailboxAddress(x.Key, x.Value)));
+        emailMessage.To.AddRange(message.To.Select(x => new MailboxAddress(x.Value, x.Key)));
         emailMessage.Subject = message.Subject;
-        emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
+        emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = message.Content };
+        return emailMessage;
+    }
+
+    private MimeMessage CreateEmailHtmlMessage(EmailMessage message)
+    {
+        var emailMessage = new MimeMessage();
+        emailMessage.From.Add(new MailboxAddress(_configuration.FromName, _configuration.From));
+        var bodyBuilder = new BodyBuilder();
+        bodyBuilder.HtmlBody = message.Content;
+        emailMessage.To.AddRange(message.To.Select(x => new MailboxAddress(x.Value, x.Key)));
+        emailMessage.Subject = message.Subject;
+        emailMessage.Body = bodyBuilder.ToMessageBody();
         return emailMessage;
     }
     private async Task Send(MimeMessage mailMessage)

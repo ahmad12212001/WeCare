@@ -46,7 +46,7 @@ public class CreateMaterialCommandHandler : IRequestHandler<CreateMaterialComman
         var blobRequest = await _blobStorageService.UploadFileAsync(new BlobStorageRequest
         {
             Path = course.Name,
-            File =request.File
+            File = request.File
         });
 
         if (blobRequest.Result.Succeeded)
@@ -68,7 +68,7 @@ public class CreateMaterialCommandHandler : IRequestHandler<CreateMaterialComman
                     material.MaterialStatus = MaterialStatus.Approved;
                     break;
                 case "VolunteerStudent":
-                    var student = _context.VolunteerStudents.FirstOrDefault(c=> c.User.Id == _currentUserService.UserId!);
+                    var student = _context.VolunteerStudents.FirstOrDefault(c => c.User.Id == _currentUserService.UserId!);
                     material.MaterialStatus = MaterialStatus.Pending;
                     material.VolunteerStudentId = student!.Id;
                     material.RequestId = request.RequestId;
@@ -94,7 +94,7 @@ public class CreateMaterialCommandHandler : IRequestHandler<CreateMaterialComman
             Subject = "Material Approvel",
             To = new Dictionary<string, string>()
                 {
-                    {name, email }
+                    {email ,name}
                 }
         });
     }

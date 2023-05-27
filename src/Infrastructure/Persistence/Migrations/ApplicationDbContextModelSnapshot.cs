@@ -650,8 +650,10 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
-                    b.Property<decimal?>("Rate")
-                        .HasColumnType("numeric");
+                    b.Property<decimal>("Rate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("numeric")
+                        .HasDefaultValue(0m);
 
                     b.Property<int>("RequestStatus")
                         .HasColumnType("integer");
@@ -742,6 +744,9 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<int>("RequestId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.Property<int>("VolunteerStudentId")
                         .HasColumnType("integer");
 
@@ -781,15 +786,19 @@ namespace WeCare.Infrastructure.Persistence.Migrations
                     b.Property<int>("MajorId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal?>("Rate")
-                        .HasColumnType("numeric");
+                    b.Property<decimal>("Rate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("numeric")
+                        .HasDefaultValue(0m);
 
                     b.Property<string>("StudentId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TotalRequest")
-                        .HasColumnType("integer");
+                    b.Property<int>("TotalRequest")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("UserId")
                         .IsRequired()

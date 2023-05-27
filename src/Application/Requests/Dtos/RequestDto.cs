@@ -1,4 +1,4 @@
-﻿namespace WeCare.Application.Requests.Dto;
+﻿namespace WeCare.Application.Requests.Dtos;
 public class RequestDto
 {
     public string CourseName { get; set; } = null!;

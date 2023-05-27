@@ -1,10 +1,9 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using WeCare.Application.Common.Interfaces;
 using WeCare.Domain.Entities;
 
-namespace WeCare.Application.RequestFeedbacks.Commands;
-public record RequestFeedbackCommand : IRequest<int>
+namespace WeCare.Application.RequestFeedbacks.Commands.CreateRequestFeedback;
+public record CreateRequestFeedbackCommand : IRequest<int>
 {
     public int RequestId { get; set; }
     public string Comment { get; set; } = null!;
@@ -12,12 +11,12 @@ public record RequestFeedbackCommand : IRequest<int>
     public decimal Rate { get; set; }
 }
 
-public class RequestFeedbackCommandHandler : IRequestHandler<RequestFeedbackCommand, int>
+public class CreateRequestFeedbackCommandHandler : IRequestHandler<CreateRequestFeedbackCommand, int>
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IIdentityService _identityService;
     private readonly IApplicationDbContext _context;
-    public RequestFeedbackCommandHandler(ICurrentUserService currentUserService,
+    public CreateRequestFeedbackCommandHandler(ICurrentUserService currentUserService,
         IApplicationDbContext context,
         IIdentityService identityService)
     {
@@ -27,7 +26,7 @@ public class RequestFeedbackCommandHandler : IRequestHandler<RequestFeedbackComm
 
     }
 
-    public async Task<int> Handle(RequestFeedbackCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateRequestFeedbackCommand request, CancellationToken cancellationToken)
     {
         var currentRequest = await _context.Requests.FindAsync(request.RequestId);
         Student student = null;
@@ -42,6 +41,8 @@ public class RequestFeedbackCommandHandler : IRequestHandler<RequestFeedbackComm
                 break;
             case "DisabilityStudent":
                 student = await _context.VolunteerStudents.FindAsync(currentRequest.AssignedVolunteerStudentId)!;
+                currentRequest.Rate = request.Rate;
+                _context.Requests.Update(currentRequest);
                 break;
         }
 
@@ -50,26 +51,12 @@ public class RequestFeedbackCommandHandler : IRequestHandler<RequestFeedbackComm
             Comment = request.Comment,
             Rate = request.Rate,
             RequestId = request.RequestId,
-            StudentId = student.Id,
+            StudentId = student!.Id,
         };
 
-        if (student.TotalRequest.HasValue)
-        {
-            student.TotalRequest += 1;
-        }
-        else
-        {
-            student.TotalRequest = 1;
-        }
 
-        if (student.Rate.HasValue)
-        {
-            student.Rate = (student.Rate + request.Rate) / student.TotalRequest;
-        }
-        else
-        {
-            student.Rate = request.Rate;
-        }
+        student.TotalRequest += 1;
+        student.Rate = (student.Rate + request.Rate) / student.TotalRequest;
 
         _context.Students.Update(student);
 

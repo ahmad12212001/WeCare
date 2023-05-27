@@ -70,7 +70,7 @@ public class CreateStudentCommandHandler : IRequestHandler<CreateStudentCommand,
                 "Password:" + password,
                 To = new Dictionary<string, string>()
                 {
-                    {request.FirstName, request.Email }
+                    { request.Email,request.FirstName }
                 }
             });
 

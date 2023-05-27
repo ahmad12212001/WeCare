@@ -1,4 +1,5 @@
 ﻿using WeCare.Application.Common.Models;
+using WeCare.Domain.Entities;
 
 namespace WeCare.Application.Common.Interfaces;
 public interface IIdentityService
@@ -13,4 +14,6 @@ public interface IIdentityService
     Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
 
     Task<Result> DeleteUserAsync(string userId);
+
+    Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName);
 }

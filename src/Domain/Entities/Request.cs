@@ -5,7 +5,7 @@ public class Request : BaseAuditableEntity
     public DateTime DueDate { get; set; }
     public RequestType RequestType { get; set; }
     public RequestStatus RequestStatus { get; set; }
-    public decimal? Rate { get; set; }
+    public decimal Rate { get; set; }
     public int CourseId { get; set; }
     public int? ExamId { get; set; }
     public int? DisabilityStudentId { get; set; }

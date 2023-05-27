@@ -766,6 +766,38 @@
         }
       }
     },
+    "/api/Materials/UpdateStatus": {
+      "put": {
+        "tags": [
+          "Materials"
+        ],
+        "operationId": "Materials_UpdateStatus",
+        "requestBody": {
+          "x-name": "changeMaterialStatusCommand",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMaterialStatusCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RequestFeedbacks": {
       "post": {
         "tags": [
@@ -777,7 +809,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestFeedbackCommand"
+                "$ref": "#/components/schemas/CreateRequestFeedbackCommand"
               }
             }
           },
@@ -792,6 +824,38 @@
                 "schema": {
                   "type": "integer",
                   "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "RequestFeedbacks"
+        ],
+        "operationId": "RequestFeedbacks_Get",
+        "parameters": [
+          {
+            "name": "RequestId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RequestFeedbackDto"
+                  }
                 }
               }
             }
@@ -854,6 +918,15 @@
               "format": "int32"
             },
             "x-position": 2
+          },
+          {
+            "name": "Description",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -863,6 +936,122 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginatedListOfRequestDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Requests/Accept/{id}/{volunteerStudentId}": {
+      "get": {
+        "tags": [
+          "Requests"
+        ],
+        "operationId": "Requests_Accept",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "volunteerStudentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Requests/Reject/{id}/{volunteerStudentId}": {
+      "get": {
+        "tags": [
+          "Requests"
+        ],
+        "operationId": "Requests_Reject",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "volunteerStudentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Requests/Terminate/{id}": {
+      "put": {
+        "tags": [
+          "Requests"
+        ],
+        "operationId": "Requests_Terminate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
                 }
               }
             }
@@ -1348,7 +1537,7 @@
             "type": "string"
           },
           "materialStatus": {
-            "$ref": "#/components/schemas/MaterialStatus"
+            "type": "string"
           },
           "requestId": {
             "type": "integer",
@@ -1359,6 +1548,19 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          }
+        }
+      },
+      "ChangeMaterialStatusCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "materialStatus": {
+            "$ref": "#/components/schemas/MaterialStatus"
+          },
+          "materialId": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1376,7 +1578,7 @@
           4
         ]
       },
-      "RequestFeedbackCommand": {
+      "CreateRequestFeedbackCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1385,6 +1587,29 @@
             "format": "int32"
           },
           "comment": {
+            "type": "string"
+          },
+          "rate": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "RequestFeedbackDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "studentName": {
+            "type": "string"
+          },
+          "submitedBy": {
             "type": "string"
           },
           "rate": {
@@ -1682,13 +1907,11 @@
               },
               "rate": {
                 "type": "number",
-                "format": "decimal",
-                "nullable": true
+                "format": "decimal"
               },
               "totalRequest": {
                 "type": "integer",
-                "format": "int32",
-                "nullable": true
+                "format": "int32"
               },
               "courses": {
                 "type": "array",
@@ -1964,6 +2187,9 @@
                 "type": "integer",
                 "format": "int32"
               },
+              "status": {
+                "$ref": "#/components/schemas/RequestVolunterStatus"
+              },
               "volunteerStudent": {
                 "$ref": "#/components/schemas/VolunteerStudent"
               },
@@ -1972,6 +2198,22 @@
               }
             }
           }
+        ]
+      },
+      "RequestVolunterStatus": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "None",
+          "Sent",
+          "Accepted",
+          "Rejected"
+        ],
+        "enum": [
+          1,
+          2,
+          4,
+          8
         ]
       },
       "Request": {
@@ -1998,8 +2240,7 @@
               },
               "rate": {
                 "type": "number",
-                "format": "decimal",
-                "nullable": true
+                "format": "decimal"
               },
               "courseId": {
                 "type": "integer",

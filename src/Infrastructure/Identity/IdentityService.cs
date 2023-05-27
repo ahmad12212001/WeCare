@@ -11,6 +11,7 @@ public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
+    //private readonly 
     private readonly IAuthorizationService _authorizationService;
 
     public IdentityService(
@@ -28,6 +29,11 @@ public class IdentityService : IIdentityService
         var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
         return user.UserName;
+    }
+
+    public async Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName)
+    {
+        return await _userManager.GetUsersInRoleAsync(roleName);
     }
 
     public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)

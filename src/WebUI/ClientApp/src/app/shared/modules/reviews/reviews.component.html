@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12" *ngFor="let review of reviews">
+      <div class="card mt-5">
+        <div class="card-body">
+          <div class="card-title">
+            <h4>Submitted by {{review?.submitedBy}}</h4>
+          </div>
+          <div class="row">
+            <div class="col-md-4 right-b">
+              <h2>{{review?.studentName}}</h2>
+              <button class="rating_circle">{{review?.rate}}</button>
+              <div>
+                <div class="stars-outer mt-4">
+                  <div class="stars-inner" rate [rating]="review?.rate"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-7">
+
+              <div class="message-body">
+                <p>{{review?.comment}}</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

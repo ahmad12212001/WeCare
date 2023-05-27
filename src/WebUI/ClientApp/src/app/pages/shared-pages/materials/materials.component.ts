@@ -21,6 +21,10 @@ export class MaterialsComponent extends FormBase implements OnInit {
   }
 
   ngOnInit() {
+    this.getMaterialsPagination();
+  }
+
+  getMaterialsPagination() {
     this._materialService.getMaterials(this.pageSize, this.pageNumber).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
       this.materials = res;
       this.groupedMaterials = this.materials.items.reduce(function (results, org) {
@@ -32,4 +36,23 @@ export class MaterialsComponent extends FormBase implements OnInit {
     })
   }
 
+  setPage(pageInfo) {
+    this.getMaterialsPagination();
+  }
+
+  approveMaterial(material: MaterialDto, status: number) {
+    this._materialService.changeMaterialStatus(material.id, status).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+      if (res) {
+        material.materialStatus = "Approved";
+      }
+    })
+  }
+
+  rejectMaterial(material: MaterialDto, status: number) {
+    this._materialService.changeMaterialStatus(material.id, status).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+      if (res) {
+        this.getMaterialsPagination();
+      }
+    })
+  }
 }
