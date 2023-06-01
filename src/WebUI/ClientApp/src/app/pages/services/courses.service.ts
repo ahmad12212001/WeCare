@@ -21,7 +21,7 @@ export class CoursesService {
   getAcacdemicStaffCourses(): Observable<Course[]> {
     return this._http.get<Course[]>(`${this.apiUrl}courses/academic`);
   }
-  
+
   getCoursePagination(pageNumber: number, pageSize: number, name: string = ''): Observable<PaginatedList<Course>> {
     return this._http.get<PaginatedList<Course>>(`${this.apiUrl}courses`, {
       params: {
@@ -32,12 +32,12 @@ export class CoursesService {
     });
   }
 
-  createCourse(course: Course) {
-    return this._http.post(`${this.apiUrl}courses`, course);
+  createCourse(course: Course): Observable<number> {
+    return this._http.post<number>(`${this.apiUrl}courses`, course);
   }
 
-  updateCourse(id: number, course: Course) {
-    return this._http.put(`${this.apiUrl}courses/${id}`, course);
+  updateCourse(id: number, course: Course): Observable<Course> {
+    return this._http.put<Course>(`${this.apiUrl}courses/${id}`, course);
   }
 
   getCourse(id: number): Observable<Course> {

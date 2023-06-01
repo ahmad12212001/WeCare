@@ -1,35 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WeCare.Application.Common.Interfaces;
-using WeCare.Application.Majors.Dtos;
-using WeCare.Application.Students.StudentDto;
-using WeCare.Domain.Entities;
 
 namespace WeCare.Application.Students.Queries;
-public record GetStudentQuery : IRequest<StudentsDto>
+public record GetStudentQuery : IRequest<StudentDto>
 {
-    public string StudentId { get; set; } = null!;
+    public int StudentId { get; set; }
 
 }
-public class GetStudentQueryHandler : IRequestHandler<GetStudentQuery, StudentsDto> { 
+public class GetStudentQueryHandler : IRequestHandler<GetStudentQuery, StudentDto>
+{
     private readonly IApplicationDbContext _context;
-private readonly IMapper _mapper;
+    public GetStudentQueryHandler(IApplicationDbContext context)
+    {
+        _context = context;
+    }
 
-public GetStudentQueryHandler(IApplicationDbContext context, IMapper mapper)
-{
-    _context = context;
-    _mapper = mapper;
-}
-
-    public async Task<StudentsDto> Handle(GetStudentQuery request, CancellationToken cancellationToken) { 
-    var student= _context.Students.AsNoTracking().Single(t => t.StudentId == request.StudentId);
-        return _mapper.Map<StudentsDto>(student);
+    public async Task<StudentDto> Handle(GetStudentQuery request, CancellationToken cancellationToken)
+    {
+        var student = _context.Students.Select(s =>
+        new StudentDto
+        {
+            Email = s.User.Email!,
+            FirstName = s.User.FirstName,
+            LastName = s.User.LastName,
+            Id = s.Id,
+            Major = s.Major.Name,
+            PhoneNumber = s.User.PhoneNumber!,
+            StudentId = s.StudentId,
+            Type = s.Discriminator
+        }).AsNoTracking().Single(t => t.Id == request.StudentId);
+        return student;
 
 
 

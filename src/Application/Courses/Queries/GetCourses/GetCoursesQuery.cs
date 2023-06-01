@@ -24,7 +24,15 @@ public class GetCoursesQueryHandler : IRequestHandler<GetCoursesQuery, List<Cour
 
     public async Task<List<CourseDto>> Handle(GetCoursesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Courses.ProjectTo<CourseDto>(_mapper.ConfigurationProvider).ToListAsync();
+        return await _context.Courses.Select(i => new CourseDto
+        {
+            Id = i.Id,
+            MajorGroupId = i.MajorGroupId,
+            AccadmeicStaffName = $"{i.User.FirstName} {i.User.LastName}",
+            MajorGroupName = i.MajorGroup.Name,
+            Name = i.Name,
+            UserId = i.UserId
+        }).ToListAsync();
     }
 
 }

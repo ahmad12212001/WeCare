@@ -152,4 +152,14 @@ export class RequestsComponent extends FormBase implements OnInit {
     })
   }
 
+  terminate(request: RequestDto) {
+    if (request.requestStatus === 'AcceptedByVolunteer' && request.hasFeedback) {
+      this._requestsService.terminate(request.id).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        if (res) {
+          this.getRequestsPagination();
+        }
+      })
+    }
+  }
+
 }

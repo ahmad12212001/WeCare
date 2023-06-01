@@ -13,7 +13,7 @@ public class DeleteMajorsValidator : AbstractValidator<DeleteMajorsCommand>
         RuleFor(v => v.MajorId).Must(IsMajorExists)
            .NotEmpty().NotNull();
     }
-    private bool IsMajorExists(int MajorId) {
-        return _context.Courses.AsNoTracking().Any(m => m.Id == MajorId);
+    private bool IsMajorExists(int majorId) {
+        return _context.Majors.Any(m => m.Id == majorId);
     }
 }

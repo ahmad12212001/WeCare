@@ -1,0 +1,29 @@
+<app-header-breadcrumb [title]="'Create Course'" [items]="['Academic-Pages']"
+  [active_item]="'Create Course'"></app-header-breadcrumb>
+
+<div class="row">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Course</h3>
+    </div>
+    <form [formGroup]="studentCoursesForm" (submit)="onSubmit()" validation [form]="studentCoursesForm"
+      [submitted]="(submitted$ | async) || false">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 form-group">
+            <label>Courses</label>
+            <ng-multiselect-dropdown name="courses" [placeholder]="'Select Courses'" [data]="courses$ | async"
+              formControlName="courses" [settings]="dropdownSettings">
+            </ng-multiselect-dropdown>
+
+
+          </div>
+
+        </div>
+        <div class="card-footer text-end">
+          <button type="Submit" class="btn btn-success mt-1 me-2">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -7,8 +7,8 @@ using WeCare.Application.Majors.Dtos;
 namespace WeCare.Application.Majors.Commands.UpdateMajors;
 public class UpdateMajorsCommand : IRequest<MajorDto>
 {
-    public int MajorId { get; set; }
-    public string MajorName { get; set; } = null!;
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
 }
 
 public class UpdateMajorsCommandHandler : IRequestHandler<UpdateMajorsCommand, MajorDto>
@@ -22,8 +22,8 @@ public class UpdateMajorsCommandHandler : IRequestHandler<UpdateMajorsCommand, M
     }
     public async Task<MajorDto> Handle(UpdateMajorsCommand request, CancellationToken cancellationToken) 
     {
-        var major = (await _context.Majors.FindAsync(request.MajorId))!;
-        major.Name = request.MajorName;
+        var major = (await _context.Majors.FindAsync(request.Id))!;
+        major.Name = request.Name;
         
         _context.Majors.Update(major);
 

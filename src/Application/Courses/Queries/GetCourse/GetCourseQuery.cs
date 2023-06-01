@@ -14,18 +14,27 @@ public record GetCourseQuery : IRequest<CourseDto>
 }
 
 public class GetCourseQueryHandler : IRequestHandler<GetCourseQuery, CourseDto>
-    {
-         private readonly IApplicationDbContext _context;
-         private readonly IMapper _mapper;
-         public GetCourseQueryHandler(IApplicationDbContext context, IMapper mapper)
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+    public GetCourseQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
     }
 
-    public async Task<CourseDto> Handle(GetCourseQuery request, CancellationToken cancellationToken) {
-        var course = _context.Courses.AsNoTracking().Single(t => t.Id/**/ == request.CourseId);
-        return _mapper.Map<CourseDto>(course);
+    public async Task<CourseDto> Handle(GetCourseQuery request, CancellationToken cancellationToken)
+    {
+        var course = _context.Courses.Select(i => new CourseDto
+        {
+            Id = i.Id,
+            MajorGroupId = i.MajorGroupId,
+            AccadmeicStaffName = $"{i.User.FirstName} {i.User.LastName}",
+            MajorGroupName = i.MajorGroup.Name,
+            Name = i.Name,
+            UserId = i.UserId
+        }).AsNoTracking().Single(t => t.Id/**/ == request.CourseId);
+        return course;
 
 
 

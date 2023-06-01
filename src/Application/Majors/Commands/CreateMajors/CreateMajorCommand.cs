@@ -9,6 +9,8 @@ namespace WeCare.Application.Majors.Commands.CreateMajors;
 public record CreateMajorCommand : IRequest<int>
 {
     public string Name { get; set; } = null!;
+
+    public int MajorGroupId { get; set; }
 }
 
 public class CreateMajorCommandHandler : IRequestHandler<CreateMajorCommand, int>
@@ -23,7 +25,8 @@ public class CreateMajorCommandHandler : IRequestHandler<CreateMajorCommand, int
     {
         var major = new Major
         {
-            Name = request.Name
+            Name = request.Name,
+            MajorGroupId = request.MajorGroupId
         };
 
         await _context.Majors.AddAsync(major);

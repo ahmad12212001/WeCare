@@ -30,6 +30,7 @@ public class CreateRequestFeedbackCommandHandler : IRequestHandler<CreateRequest
     {
         var currentRequest = await _context.Requests.FindAsync(request.RequestId);
         Student student = null;
+        Student submitedByStudent = null;
 
         var userRole = await _identityService.GetUserRoleAsync(_currentUserService.UserId!);
 
@@ -38,9 +39,11 @@ public class CreateRequestFeedbackCommandHandler : IRequestHandler<CreateRequest
         {
             case "VolunteerStudent":
                 student = await _context.DisabilityStudents.FindAsync(currentRequest.DisabilityStudentId)!;
+                submitedByStudent = currentRequest.AssignedVolunteerStudent;
                 break;
             case "DisabilityStudent":
                 student = await _context.VolunteerStudents.FindAsync(currentRequest.AssignedVolunteerStudentId)!;
+                submitedByStudent = currentRequest.DisabilityStudent;
                 currentRequest.Rate = request.Rate;
                 _context.Requests.Update(currentRequest);
                 break;
@@ -52,6 +55,7 @@ public class CreateRequestFeedbackCommandHandler : IRequestHandler<CreateRequest
             Rate = request.Rate,
             RequestId = request.RequestId,
             StudentId = student!.Id,
+            SubmitedByStudentId = submitedByStudent.Id
         };
 
 

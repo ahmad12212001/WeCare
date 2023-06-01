@@ -33,12 +33,12 @@ export class ExamsService {
     });
   }
 
-  createExam(exam: Exam) {
-    return this._http.post(`${this.apiUrl}exams`, exam);
+  createExam(exam: Exam): Observable<number> {
+    return this._http.post<number>(`${this.apiUrl}exams`, exam);
   }
 
-  updateExam(exam: Exam) {
-    return this._http.put(`${this.apiUrl}exams/${exam.id}`, exam);
+  updateExam(exam: Exam): Observable<Exam> {
+    return this._http.put<Exam>(`${this.apiUrl}exams/${exam.id}`, exam);
   }
 
   deleteExam(id: number) {

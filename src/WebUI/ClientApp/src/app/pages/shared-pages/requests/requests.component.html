@@ -39,7 +39,8 @@
                                 <a class="btn  btn-sm ms-2 white-color" [ngClass]="{'btn-warning': request?.requestStatus == 'Created',
                                 'btn-secondary': request?.requestStatus =='Accepted',
                                 'btn-success': request?.requestStatus =='AcceptedByVolunteer',
-                                'btn-info':request?.requestStatus == 'ReAssigning'}">{{request?.requestStatus}}</a>
+                                'btn-info':request?.requestStatus == 'ReAssigning'}"
+                                (click)="terminate(request)">{{request?.requestStatus}}</a>
                             </div>
                         </div>
                         <div class="card-body">

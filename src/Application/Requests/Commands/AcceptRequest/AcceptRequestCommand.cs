@@ -115,7 +115,7 @@ public class AcceptRequestCommandHandler : IRequestHandler<AcceptRequestCommand,
         {
             Subject = "Request Informationm",
             Content = templateHtml,
-            To = new Dictionary<string, string> { { name, email } }
+            To = new Dictionary<string, string> { { email, name } }
         });
     }
 }

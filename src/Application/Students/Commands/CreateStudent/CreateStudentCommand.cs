@@ -9,7 +9,7 @@ using WeCare.Domain.Enums;
 namespace WeCare.Application.Students.Commands.CreateStudent;
 public record CreateStudentCommand : IRequest<int>
 {
-    public string Id { get; set; } = null!;
+    public string StudentId { get; set; } = null!;
     public string Major { get; set; } = null!;
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
@@ -50,7 +50,8 @@ public class CreateStudentCommandHandler : IRequestHandler<CreateStudentCommand,
             NormalizedEmail = request.Email.ToUpper(),
             UserName = request.Email,
             NormalizedUserName = request.Email.ToUpper(),
-            PhoneNumber = request.PhoneNumber
+            PhoneNumber = request.PhoneNumber,
+            
         };
 
         var password = _passwordGenerator.GeneratePassword();
@@ -86,7 +87,7 @@ public class CreateStudentCommandHandler : IRequestHandler<CreateStudentCommand,
                     student = new DisabilityStudent
                     {
 
-                        StudentId = request.Id,
+                        StudentId = request.StudentId,
                         MajorId = major.Id,
                         UserId = applicationUser.Id
 
@@ -96,7 +97,7 @@ public class CreateStudentCommandHandler : IRequestHandler<CreateStudentCommand,
                     student = new VolunteerStudent
                     {
 
-                        StudentId = request.Id,
+                        StudentId = request.StudentId,
                         MajorId = major.Id,
                         UserId = applicationUser.Id
 

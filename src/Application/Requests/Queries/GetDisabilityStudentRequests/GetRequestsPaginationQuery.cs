@@ -100,7 +100,7 @@ public class GetRequestsPaginationQueryHandler : IRequestHandler<GetRequestsPagi
         ((i.RequestType == RequestType.Material || i.RequestType == RequestType.Assignment) ?
           i.Course.MajorGroupId == student.Major.MajorGroupId : false) &&
           (i.AssignedVolunteerStudentId == null || i.AssignedVolunteerStudentId == student.Id) &&
-          (i.RequestStatus != RequestStatus.Done || (i.FeedBacks != null && i.FeedBacks.Any(f => f.StudentId == student.Id))) &&
+          (i.RequestStatus != RequestStatus.Done ) &&
           (!string.IsNullOrEmpty(request.Description) ? i.Description.ToLower().Contains(request.Description.ToLower()) : true)
           ).OrderByDescending(i => i.DueDate)
           .Select(request => new RequestDto
@@ -124,8 +124,7 @@ public class GetRequestsPaginationQueryHandler : IRequestHandler<GetRequestsPagi
 
         return await _context.Requests
            .Where(x => x.DisabilityStudentId == student.Id &&
-                   (x.RequestStatus != RequestStatus.Done ||
-                   (x.FeedBacks != null && x.FeedBacks.Any(f => f.StudentId == student.Id))) &&
+                   (x.RequestStatus != RequestStatus.Done ) &&
                    (!string.IsNullOrEmpty(request.Description) ? x.Description.ToLower().Contains(request.Description.ToLower()) : true)
                    ).OrderByDescending(i => i.DueDate)
            .Select(request => new RequestDto

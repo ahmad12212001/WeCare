@@ -1,0 +1,54 @@
+<app-header-breadcrumb [title]="'Create Student'" [items]="['Dean-Office-Pages']"
+  [active_item]="'Create Student'"></app-header-breadcrumb>
+
+<div class="row">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Student</h3>
+    </div>
+    <form [formGroup]="studentForm" (submit)="onSubmit()" validation [form]="studentForm"
+      [submitted]="(submitted$ | async) || false">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="firstName"></label>
+            <input type="text" class="form-control" placeholder="First Name" formControlName="firstName">
+            <div class="err-msg">First Name. is Required</div>
+          </div>
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="lastName"></label>
+            <input type="text" class="form-control" placeholder="Last Name" formControlName="lastName">
+            <div class="err-msg">Last Name. is Required</div>
+          </div>
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="email"></label>
+            <input type="email" class="form-control" placeholder="Email" formControlName="email">
+            <div class="err-msg">Email. is Required</div>
+          </div>
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="phoneNumber"></label>
+            <input type="tel" class="form-control" placeholder="PhoneNumber" formControlName="phoneNumber">
+            <div class="err-msg">PhoneNumber. is Required</div>
+          </div>
+          <div class="col-lg-6 col-md-12 form-group">
+            <label for="studentId"></label>
+            <input type="text" class="form-control" placeholder="Student No" formControlName="studentId">
+            <div class="err-msg">Student No. is Required</div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <drop-down [options]="studentTypes" formControlName="type" [id]="'type'" [placeholder]="'Select Type'">
+            </drop-down>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <drop-down [options]="majors" formControlName="major" [id]="'major'" [placeholder]="'Select Major'">
+            </drop-down>
+          </div>
+
+        </div>
+        <div class="card-footer text-end">
+          <button type="Submit" class="btn btn-success mt-1 me-2">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

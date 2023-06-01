@@ -16,7 +16,7 @@ export const routes: Routes = [
       },
       {
         path: 'courses',
-        loadChildren: () => import('../app/pages/academic-staff-pages/courses/courses.module').then(m => m.CoursesModule)
+        loadChildren: () => import('../app/pages/dean-office-pages/courses/courses.module').then(m => m.CoursesModule)
       },
       {
         path: 'requests',
@@ -26,10 +26,27 @@ export const routes: Routes = [
         path: 'materials',
         loadChildren: () => import('../app/pages/shared-pages/materials/materials.module').then(m => m.MaterialsModule)
       },
+      {
+        path: 'majors',
+        loadChildren: () => import('../app/pages/dean-office-pages/majors/majors.module').then(m => m.MajorsModule)
+      },
+      {
+        path: 'major-groups',
+        loadChildren: () => import('../app/pages/dean-office-pages/majors-group/majors-group.module').then(m => m.MajorsGroupModule)
+      },
+      {
+        path: 'students',
+        loadChildren: () => import('../app/pages/shared-pages/students/students.module').then(m => m.StudentsModule)
+      },
+      {
+        path: 'users',
+        loadChildren: () => import('../app/pages/dean-office-pages/users/users.module').then(m => m.UsersModule)
+      },
       { path: '', redirectTo: 'exams', pathMatch: 'full' }
     ]
   }
   ,
+  { path: 'home', loadChildren: () => import('../app/pages/home/home.module').then(m => m.HomeModule) },
   { path: '', component: ErrorStyleComponent, children: error_content }
 ];
 

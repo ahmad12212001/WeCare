@@ -5,10 +5,13 @@ using WeCare.Domain.Entities;
 
 namespace WeCare.Application.Courses.Commands.CreateCourse;
 
-[Authorize(Roles = "AcademicStaff")]
+[Authorize(Roles = "DeanOffice")]
 public record CreateCourseCommand : IRequest<int>
 {
     public string Name { get; set; } = null!;
+    public string UserId { get; set; } = null!;
+
+    public int MajorGroupId { get; set; }
 }
 
 public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, int>
@@ -26,7 +29,8 @@ public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, i
         var course = new Course
         {
             Name = request.Name,
-            UserId = _currentUser?.UserId!
+            UserId =request.UserId,
+            MajorGroupId = request.MajorGroupId
         };
 
         await _context.Courses.AddAsync(course);

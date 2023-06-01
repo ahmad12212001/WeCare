@@ -5,7 +5,7 @@ using WeCare.Application.Common.Security;
 
 namespace WeCare.Application.Courses.Commands.DeleteCourse;
 
-[Authorize(Roles = "AcademicStaff")]
+[Authorize(Roles = "DeanOffice")]
 public record DeleteCourseCommand : IRequest<int>
 {
     public int CourseId { get; set; }

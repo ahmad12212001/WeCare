@@ -17,8 +17,8 @@ export class RequestsService {
 
   constructor(private _http: HttpClient) { }
 
-  createRequest(request: Request) {
-    return this._http.post(`${this.apiUrl}requests`, request);
+  createRequest(request: Request): Observable<number> {
+    return this._http.post<number>(`${this.apiUrl}requests`, request);
   }
 
   getRequest(id: number) {
@@ -45,6 +45,10 @@ export class RequestsService {
 
   addRequestFeedback(requestFeedback: RequestFeedback) {
     return this._http.post<number>(`${this.apiUrl}requestfeedbacks`, requestFeedback);
+  }
+
+  terminate(id: number) {
+    return this._http.put(`${this.apiUrl}requests/terminate/${id}`, {});
   }
 
   getRequestFeedbacks(request: RequestDto) {

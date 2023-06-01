@@ -35,6 +35,7 @@ public class RequestVolunteerCommandHandler : IRequestHandler<RequestVolunteerCo
         {
             VolunteerStudentId = student.Id,
             RequestId = request.RequestId,
+            Status = RequestVolunterStatus.None
         };
 
         await _applicationDbContext.RequestVolunteers.AddAsync(requestVolunteer);

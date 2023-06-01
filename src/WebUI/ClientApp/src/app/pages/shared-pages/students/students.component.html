@@ -1,3 +1,109 @@
-<p>
-  students works!
-</p>
+<div class="col-xl-12">
+  <div class="card mg-b-20">
+    <div class="card-header pb-0">
+      <div class="col-10">
+        <h6 class="main-content-label mb-1">Students</h6>
+
+      </div>
+      <div class="col-2">
+        <a [routerLink]="['/students/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
+          <span>
+            <i class="fe fe-plus"></i>
+          </span> Add Student
+        </a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-6 col-md-12 form-group">
+          <label for="name"></label>
+          <input type="text" class="form-control" placeholder="Name" [formControl]="name">
+        </div>
+      </div>
+      <ngx-datatable class="material" [rows]="rows?.items" [columnMode]="ColumnMode.force" [headerHeight]="50"
+        [summaryHeight]="55" [footerHeight]="50" rowHeight="auto" [externalPaging]="true" [count]="rows?.totalCount"
+        [offset]="rows?.pageNumber" [limit]="rows?.pageSize" (page)="setPage($event)">
+        <ngx-datatable-column prop="id" [width]="40">
+          <ng-template let-column="column" ngx-datatable-header-template>
+            Id
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="studentId" [width]="120">
+          <ng-template let-column="column" ngx-datatable-header-template>
+            Student No.
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="firstName" [width]="120">
+          <ng-template let-column="column" ngx-datatable-header-template>
+            FirstName
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="lastName" [width]="120">
+          <ng-template let-column="column" ngx-datatable-header-template>
+            LastName
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="email" [width]="120">
+          <ng-template let-column="column" ngx-datatable-header-template>
+            Email
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="phoneNumber" [width]="105">
+          <ng-template let-column="column" ngx-datatable-header-template>
+            PhoneNumber
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="major" [width]="100">
+          <ng-template let-column="column" ngx-datatable-header-template>
+            Major
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="courses" [width]="120">
+          <ng-template let-column="column" ngx-datatable-header-template>
+            Courses
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="id" [width]="140">
+          <ng-template ngx-datatable-header-template>
+            Actions
+          </ng-template>
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <div class="d-flex">
+
+              <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i ngbTooltip="Edit"
+                  class="fa fa-edit"></i> </a>
+              <a [routerLink]="['operation-courses',value]" routerLinkActive="router-link-active" class=""><i
+                  ngbTooltip="Courses Enrollment"  placement="bottom" class="fa fa-book"></i> </a>
+
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>

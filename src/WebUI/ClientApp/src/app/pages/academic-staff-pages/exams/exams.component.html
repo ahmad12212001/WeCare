@@ -1,9 +1,16 @@
 <div class="col-xl-12">
     <div class="card mg-b-20">
         <div class="card-header pb-0">
-            <div>
+            <div class="col-10">
                 <h6 class="main-content-label mb-1">Exams</h6>
 
+            </div>
+            <div class="col-2">
+                <a [routerLink]="['/exams/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
+                    <span>
+                        <i class="fe fe-plus"></i>
+                    </span> Add Exam
+                </a>
             </div>
         </div>
         <div class="card-body">

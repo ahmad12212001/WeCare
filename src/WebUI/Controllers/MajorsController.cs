@@ -5,7 +5,8 @@ using WeCare.Application.Majors.Commands.DeleteMajors;
 using WeCare.Application.Majors.Commands.UpdateMajors;
 using WeCare.Application.Majors.Dtos;
 using WeCare.Application.Majors.Queries.GetMajor;
-
+using WeCare.Application.Majors.Queries.GetMajors;
+using WeCare.Domain.Entities;
 
 namespace WeCare.WebUI.Controllers;
 [Route("api/[controller]")]
@@ -22,7 +23,13 @@ public class MajorsController : ApiControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<MajorDto>> GetMajor(int id)
     {
-        return await Mediator.Send(new GetMajorQuery() { MajorId = id});
+        return await Mediator.Send(new GetMajorQuery() { MajorId = id });
+    }
+
+    [HttpGet("List")]
+    public async Task<ActionResult<List<MajorDto>>> GetMajors()
+    {
+        return await Mediator.Send(new GetMajorsListQuery());
     }
 
     [HttpPost]
@@ -30,13 +37,15 @@ public class MajorsController : ApiControllerBase
     {
         return await Mediator.Send(createMajorCommand);
     }
-    [HttpPut]
-    public async Task<ActionResult<MajorDto>> Update(UpdateMajorsCommand command)
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<MajorDto>> Update(int id, [FromBody] UpdateMajorsCommand command)
     {
         return await Mediator.Send(command);
     }
+
     [HttpDelete("{id}")]
-    public async Task<ActionResult<string>> Delete(int id)
+    public async Task<ActionResult<Major>> Delete(int id)
     {
         return await Mediator.Send(new DeleteMajorsCommand { MajorId = id });
     }

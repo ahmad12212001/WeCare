@@ -27,8 +27,15 @@ public class GetAcademicStaffCoursesQueryHandler : IRequestHandler<GetAcademicSt
     public async Task<List<CourseDto>> Handle(GetAcademicStaffCoursesQuery request, CancellationToken cancellationToken)
     {
         return await _context.Courses.Where(c => c.UserId == _currentUserService.UserId!)
-            .OrderBy(x => x.Name)
-            .ProjectTo<CourseDto>(_mapper.ConfigurationProvider).ToListAsync();
+            .OrderBy(x => x.Name).Select(i => new CourseDto
+            {
+                Id = i.Id,
+                MajorGroupId = i.MajorGroupId,
+                AccadmeicStaffName = $"{i.User.FirstName} {i.User.LastName}",
+                MajorGroupName = i.MajorGroup.Name,
+                Name = i.Name,
+                UserId = i.UserId
+            }).ToListAsync();
         
 
     }

@@ -11,10 +11,10 @@ public class UpdateMajorsValidator :AbstractValidator<UpdateMajorsCommand>
     public UpdateMajorsValidator(IApplicationDbContext context)
     {
         _context = context;
-        RuleFor(v => v.MajorId).Must(IsMajorExists)
+        RuleFor(v => v.Id).Must(IsMajorExists)
             .NotEmpty().NotNull();
-        RuleFor(v => v.MajorName).NotEmpty().NotNull();
-        RuleFor(v => v).Must(v => IsMajorNewNameNotExist(v.MajorId, v.MajorName)).NotEmpty().NotNull();
+        RuleFor(v => v.Name).NotEmpty().NotNull();
+        RuleFor(v => v).Must(v => IsMajorNewNameNotExist(v.Id, v.Name)).NotEmpty().NotNull();
     }
 
     private bool IsMajorExists(int /**/majorId)

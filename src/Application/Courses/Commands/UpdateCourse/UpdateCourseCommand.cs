@@ -3,11 +3,10 @@ using MediatR;
 using WeCare.Application.Common.Interfaces;
 using WeCare.Application.Common.Security;
 using WeCare.Application.Courses.Dtos;
-using WeCare.Domain.Entities;
 
 namespace WeCare.Application.Courses.Commands.UpdateCourse;
 
-[Authorize(Roles = "AcademicStaff")]
+[Authorize(Roles = "DeanOffice")]
 public record UpdateCourseCommand : IRequest<CourseDto>
 {
     public int Id { get; set; }

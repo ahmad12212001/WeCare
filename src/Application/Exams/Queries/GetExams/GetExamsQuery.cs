@@ -24,7 +24,7 @@ public class GetExamsQueryHandler : IRequestHandler<GetExamsQuery, List<ExamDto>
     public async Task<List<ExamDto>> Handle(GetExamsQuery request, CancellationToken cancellationToken)
     {
 
-        return await _context.Exams.ProjectTo<ExamDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
+        return await _context.Exams.Where(i => i.DueDate >= DateTime.UtcNow).ProjectTo<ExamDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
 
     }
 

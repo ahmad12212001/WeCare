@@ -1,0 +1,30 @@
+<app-header-breadcrumb [title]="'Create Major'" [items]="['Dean-Office-Pages']"
+    [active_item]="'Create Major'"></app-header-breadcrumb>
+
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Major</h3>
+        </div>
+        <form [formGroup]="majorForm" (submit)="onSubmit()" validation [form]="majorForm"
+            [submitted]="(submitted$ | async) || false">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 form-group">
+                        <label for="name"></label>
+                        <input type="text" class="form-control" placeholder="Major Name" formControlName="name">
+                        <div class="err-msg">Major Name. is Required</div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <drop-down [options]="majorGroups" formControlName="majorGroup" [id]="'majorGroup'"
+                            [placeholder]="'Select Major Gorups'">
+                        </drop-down>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="Submit" class="btn btn-success mt-1 me-2">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthorizeService, AuthenticationResultStatus } from '../authorize.service';
+import { AuthorizeService, AuthenticationResultStatus, UserInfo } from '../authorize.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import { LoginActions, QueryParameterNames, ApplicationPaths, ReturnUrlType } from '../api-authorization.constants';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 // The main responsibility of this component is to handle the user's login process.
 // This is the starting point for the login process. Any component that needs to authenticate
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private authorizeService: AuthorizeService,
     private activatedRoute: ActivatedRoute,
-    private router: Router) { }
+    private router: Router, private _ngxPermissionsService: NgxPermissionsService) { }
 
   async ngOnInit() {
     const action = this.activatedRoute.snapshot.url[1];
@@ -74,7 +75,11 @@ export class LoginComponent implements OnInit {
         // There should not be any redirects as completeSignIn never redirects.
         throw new Error('Should not redirect.');
       case AuthenticationResultStatus.Success:
+        await this
         await this.navigateToReturnUrl(this.getReturnUrl(result.state ?? "/"));
+        await lastValueFrom(this.authorizeService.getUserInfo()).then((user: UserInfo) => {
+          this._ngxPermissionsService.addPermission(user.role);
+        })
         break;
       case AuthenticationResultStatus.Fail:
         this.message.next(result.message);

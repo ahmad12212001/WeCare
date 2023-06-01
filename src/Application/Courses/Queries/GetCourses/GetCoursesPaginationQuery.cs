@@ -31,7 +31,15 @@ public class GetCoursesPaginationQueryHandler : IRequestHandler<GetCoursesPagina
         return await _context.Courses
             .Where(x => !string.IsNullOrEmpty(request.Name) ? x.Name.Contains(request.Name) : true)
             .OrderBy(x => x.Name)
-            .ProjectTo<CourseDto>(_mapper.ConfigurationProvider)
+            .Select(i => new CourseDto
+            {
+                Id = i.Id,
+                MajorGroupId = i.MajorGroupId,
+                AccadmeicStaffName = $"{i.User.FirstName} {i.User.LastName}",
+                MajorGroupName = i.MajorGroup.Name,
+                Name = i.Name,
+                UserId = i.UserId
+            })
             .PaginatedListAsync(request.PageNumber, request.PageSize);
 
     }

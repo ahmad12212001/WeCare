@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Exam } from '@app/pages/models/exam';
 import { CoursesService } from '@app/pages/services/courses.service';
 import { ExamsService } from '@app/pages/services/exams.service';
@@ -19,9 +19,9 @@ export class ExamOperationComponent extends FormBase implements OnInit {
   courses: Option[] = [];
 
   constructor(private _fb: FormBuilder,
-    private _ExamsService: ExamsService,
+    private _examsService: ExamsService,
     private _courseService: CoursesService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute, private _router: Router) {
     super();
   }
 
@@ -39,7 +39,7 @@ export class ExamOperationComponent extends FormBase implements OnInit {
       this.courses = res;
       const id = this.route.snapshot.params.id;
       if (id && id > 0) {
-        this._ExamsService.getExam(id).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        this._examsService.getExam(id).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
           this.examForm.setValue({
             id: res.id,
             hallNo: res.hallNo,
@@ -84,12 +84,18 @@ export class ExamOperationComponent extends FormBase implements OnInit {
     }
 
     if (exam.id) {
-      this._ExamsService.updateExam(exam).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-        debugger
+      this._examsService.updateExam(exam).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        if (res.id) {
+          this._router.navigate(['exams']);
+        }
+
       })
     } else {
-      this._ExamsService.createExam(exam).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-        debugger
+      this._examsService.createExam(exam).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        if (res && res > 0) {
+          this._router.navigate(['exams']);
+        }
+
       })
     }
 

@@ -9,15 +9,10 @@ using WeCare.Application.Common.Interfaces;
 namespace WeCare.Application.Students.Commands.CreateStudent;
 public class CreateStudentCommandValidator : AbstractValidator<CreateStudentCommand>
 {
-    
-    public CreateStudentCommandValidator(IApplicationDbContext applicationDbContext) {
-  
+
+    public CreateStudentCommandValidator(IApplicationDbContext applicationDbContext)
+    {
         RuleFor(r => r.Major).NotEmpty().NotNull();
-        RuleFor(r => r.Id).NotNull();
-
-
-
-
-
+        RuleFor(r => r.StudentId).NotNull();
     }
 }

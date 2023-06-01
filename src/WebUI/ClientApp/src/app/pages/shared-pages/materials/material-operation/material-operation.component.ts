@@ -1,7 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Material } from '@app/pages/models/material';
 import { CoursesService } from '@app/pages/services/courses.service';
 import { MaterialsService } from '@app/pages/services/materials.service';
@@ -32,7 +32,8 @@ export class MaterialOperationComponent extends FormBase implements OnInit {
 
   constructor(private _fb: FormBuilder, private _route: ActivatedRoute,
     private _materialService: MaterialsService,
-    private _courseService: CoursesService) {
+    private _courseService: CoursesService,
+    private _router: Router) {
     super();
   }
 
@@ -77,7 +78,12 @@ export class MaterialOperationComponent extends FormBase implements OnInit {
 
     this._materialService.createMaterial(material).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
       if (res.type === HttpEventType.UploadProgress) {
-        this.options.progress$.value = (Math.round(100 * res.loaded / res.total)) + "%";
+        let result = (Math.round(100 * res.loaded / res.total));
+        this.options.progress$.value = result + "%";
+        if (result === 100) {
+          this._router.navigate(['materials']);
+        }
+
       }
     })
   }

@@ -33,14 +33,14 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 col-sm-12">
+          <div class="col-md-6 col-sm-12" *ngIf="requestForm.value.requestType?.name ==='Exam'">
 
             <drop-down [options]="exams$ | async" formControlName="exam" [id]="'exam'" [placeholder]="'Select Exam'">
             </drop-down>
           </div>
         </div>
         <div class="card-footer text-end">
-          <button type="Submit" class="btn btn-success mt-1 me-2">Save</button>
+          <button type="Submit" class="btn btn-success mt-1 me-2" [disabled]="(onSubmit$ | async) == true">Save</button>
         </div>
       </div>
     </form>
