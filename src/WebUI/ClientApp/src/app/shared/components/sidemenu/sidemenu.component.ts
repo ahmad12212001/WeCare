@@ -1,7 +1,7 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { fromEvent } from 'rxjs';
+import { async, fromEvent } from 'rxjs';
 import { Menu, NavService } from '../../services/nav.service';
 import { checkHoriMenu, parentNavActive, switcherArrowFn } from './sidemenu';
 
@@ -20,10 +20,11 @@ export class SidemenuComponent implements OnInit {
     public elRef: ElementRef,
     private breakpointObserver: BreakpointObserver
   ) {
-    this.checkNavActiveOnLoad();
+
   }
   // To set Active on Load
-  checkNavActiveOnLoad() {
+  async checkNavActiveOnLoad() {
+    await this.navServices.getMenuItems();
     this.navServices.items.subscribe((menuItems: any) => {
       this.menuItems = menuItems;
 
@@ -99,7 +100,8 @@ export class SidemenuComponent implements OnInit {
     });
   }
 
-  checkCurrentActive() {
+  async checkCurrentActive() {
+    await this.navServices.getMenuItems()
     this.navServices.items.subscribe((menuItems: any) => {
       this.menuItems = menuItems;
       let currentUrl = this.router.url;
@@ -213,7 +215,8 @@ export class SidemenuComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.checkNavActiveOnLoad();
     switcherArrowFn();
 
     fromEvent(window, 'resize').subscribe(() => {
@@ -233,10 +236,10 @@ export class SidemenuComponent implements OnInit {
     });
 
     // detect screen size changes
-    this.breakpointObserver.observe(['(max-width: 991px)']).subscribe((result: BreakpointState) => {
+    this.breakpointObserver.observe(['(max-width: 991px)']).subscribe(async (result: BreakpointState) => {
       if (result.matches) {
         // small screen
-        this.checkCurrentActive();
+        await this.checkCurrentActive();
       } else {
         // large screen
         document.querySelector('body.horizontal')?.classList.remove('sidenav-toggled');
@@ -252,8 +255,8 @@ export class SidemenuComponent implements OnInit {
     let vertical: any = document.querySelectorAll('#myonoffswitch1');
     let horizontal: any = document.querySelectorAll('#myonoffswitch2');
     let horizontalHover: any = document.querySelectorAll('#myonoffswitch111');
-    fromEvent(vertical, 'click').subscribe(() => {
-      this.checkCurrentActive();
+    fromEvent(vertical, 'click').subscribe(async () => {
+      await this.checkCurrentActive();
     });
     fromEvent(horizontal, 'click').subscribe(() => {
       this.closeNavActive();

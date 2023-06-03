@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
         // There should not be any redirects as completeSignIn never redirects.
         throw new Error('Should not redirect.');
       case AuthenticationResultStatus.Success:
-        await this
+
         await this.navigateToReturnUrl(this.getReturnUrl(result.state ?? "/"));
         await lastValueFrom(this.authorizeService.getUserInfo()).then((user: UserInfo) => {
           this._ngxPermissionsService.addPermission(user.role);
@@ -99,6 +99,10 @@ export class LoginComponent implements OnInit {
   private async navigateToReturnUrl(returnUrl: string) {
     // It's important that we do a replace here so that we remove the callback uri with the
     // fragment containing the tokens from the browser history.
+    if (returnUrl === '/' || returnUrl === '') {
+      returnUrl = "/landing-page";
+    }
+
     await this.router.navigateByUrl(returnUrl, {
       replaceUrl: true
     });

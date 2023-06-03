@@ -5,13 +5,15 @@
         <h6 class="main-content-label mb-1">Users</h6>
 
       </div>
-      <div class="col-2">
-        <a [routerLink]="['/users/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
-          <span>
-            <i class="fe fe-plus"></i>
-          </span> Add User
-        </a>
-      </div>
+      <ng-template [ngxPermissionsOnly]="['DeanOffice']">
+        <div class="col-2">
+          <a [routerLink]="['/users/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
+            <span>
+              <i class="fe fe-plus"></i>
+            </span> Add User
+          </a>
+        </div>
+      </ng-template>
     </div>
     <div class="card-body">
       <div class="row">
@@ -71,27 +73,29 @@
             {{value}}
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column prop="id" [width]="120">
-          <ng-template ngx-datatable-header-template>
-            Actions
-          </ng-template>
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <div class="row">
-              <div class="col">
-                <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i ngbTooltip="Edit"
-                    class="fa fa-edit"></i> </a>
-              </div>
-              <div class="col">
-                <a [routerLink]="['change-password',value]" routerLinkActive="router-link-active"> <i class="fa fa-key"
-                    aria-hidden="true" ngbTooltip="Change Password"></i></a>
-              </div>
+        <ng-template [ngxPermissionsOnly]="['DeanOffice']">
+          <ngx-datatable-column prop="id" [width]="120">
+            <ng-template ngx-datatable-header-template>
+              Actions
+            </ng-template>
+            <ng-template let-value="value" ngx-datatable-cell-template>
+              <div class="row">
+                <div class="col">
+                  <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i ngbTooltip="Edit"
+                      class="fa fa-edit"></i> </a>
+                </div>
+                <div class="col">
+                  <a [routerLink]="['change-password',value]" routerLinkActive="router-link-active"> <i
+                      class="fa fa-key" aria-hidden="true" ngbTooltip="Change Password"></i></a>
+                </div>
 
-              <div class="col" (click)="deleteUser(value)">
-                <i ngbTooltip="Delete" class="fa fa-trash danger-icon"></i>
+                <div class="col" (click)="deleteUser(value)">
+                  <i ngbTooltip="Delete" class="fa fa-trash danger-icon"></i>
+                </div>
               </div>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
+            </ng-template>
+          </ngx-datatable-column>
+        </ng-template>
       </ngx-datatable>
     </div>
   </div>

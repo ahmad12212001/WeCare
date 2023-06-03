@@ -5,13 +5,15 @@
         <h6 class="main-content-label mb-1">Students</h6>
 
       </div>
-      <div class="col-2">
-        <a [routerLink]="['/students/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
-          <span>
-            <i class="fe fe-plus"></i>
-          </span> Add Student
-        </a>
-      </div>
+      <ng-template [ngxPermissionsOnly]="['DeanOffice']">
+        <div class="col-2">
+          <a [routerLink]="['/students/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
+            <span>
+              <i class="fe fe-plus"></i>
+            </span> Add Student
+          </a>
+        </div>
+      </ng-template>
     </div>
     <div class="card-body">
       <div class="row">
@@ -87,22 +89,23 @@
             {{value}}
           </ng-template>
         </ngx-datatable-column>
+        <ng-template [ngxPermissionsOnly]="['DeanOffice']">
+          <ngx-datatable-column prop="id" [width]="140">
+            <ng-template ngx-datatable-header-template>
+              Actions
+            </ng-template>
+            <ng-template let-value="value" ngx-datatable-cell-template>
+              <div class="d-flex">
 
-        <ngx-datatable-column prop="id" [width]="140">
-          <ng-template ngx-datatable-header-template>
-            Actions
-          </ng-template>
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <div class="d-flex">
+                <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i ngbTooltip="Edit"
+                    class="fa fa-edit"></i> </a>
+                <a [routerLink]="['operation-courses',value]" routerLinkActive="router-link-active" class=""><i
+                    ngbTooltip="Courses Enrollment" placement="bottom" class="fa fa-book"></i> </a>
 
-              <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i ngbTooltip="Edit"
-                  class="fa fa-edit"></i> </a>
-              <a [routerLink]="['operation-courses',value]" routerLinkActive="router-link-active" class=""><i
-                  ngbTooltip="Courses Enrollment"  placement="bottom" class="fa fa-book"></i> </a>
-
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ng-template>
       </ngx-datatable>
     </div>
   </div>

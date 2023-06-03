@@ -26,6 +26,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleSidebar() {
+    debugger
     if ((this.navServices.collapseSidebar = !this.navServices.collapseSidebar)) {
       document.querySelector('.app')?.classList.add('sidenav-toggled');
     }

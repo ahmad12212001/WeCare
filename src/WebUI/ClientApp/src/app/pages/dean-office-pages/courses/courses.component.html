@@ -5,13 +5,15 @@
                 <h6 class="main-content-label mb-1">Courses</h6>
 
             </div>
-            <div class="col-2">
-                <a [routerLink]="['/courses/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
-                    <span>
-                        <i class="fe fe-plus"></i>
-                    </span> Add Course
-                </a>
-            </div>
+            <ng-template [ngxPermissionsOnly]="['DeanOffice']">
+                <div class="col-2">
+                    <a [routerLink]="['/courses/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
+                        <span>
+                            <i class="fe fe-plus"></i>
+                        </span> Add Course
+                    </a>
+                </div>
+            </ng-template>
         </div>
         <div class="card-body">
             <div class="row">
@@ -57,23 +59,25 @@
                         {{value}}
                     </ng-template>
                 </ngx-datatable-column>
+                <ng-template [ngxPermissionsOnly]="['DeanOffice']">
+                    <ngx-datatable-column prop="id" [width]="120">
+                        <ng-template ngx-datatable-header-template>
+                            Actions
+                        </ng-template>
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                            <div class="row">
+                                <div class="col">
+                                    <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i
+                                            ngbTooltip="Edit" class="fa fa-edit"></i> </a>
+                                </div>
 
-                <ngx-datatable-column prop="id" [width]="120">
-                    <ng-template ngx-datatable-header-template>
-                        Actions
-                    </ng-template>
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                        <div class="row">
-                            <div class="col">
-                                <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i
-                                        ngbTooltip="Edit" class="fa fa-edit"></i> </a>
+                                <div class="col" (click)="deleteCourse(value)">
+                                    <i ngbTooltip="Delete" class="fa fa-trash danger-icon"></i>
+                                </div>
+
                             </div>
-                            <div class="col" (click)="deleteCourse(value)">
-                                <i ngbTooltip="Delete" class="fa fa-trash danger-icon"></i>
-                            </div>
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
+                        </ng-template>
+                    </ngx-datatable-column> </ng-template>
             </ngx-datatable>
         </div>
     </div>

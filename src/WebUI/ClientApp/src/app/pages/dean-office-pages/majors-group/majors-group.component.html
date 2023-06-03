@@ -5,13 +5,15 @@
                 <h6 class="main-content-label mb-1">Major Groups</h6>
 
             </div>
-            <div class="col-2">
-                <a [routerLink]="['/major-groups/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
-                    <span>
-                        <i class="fe fe-plus"></i>
-                    </span> Add Major Group
-                </a>
-            </div>
+            <ng-template [ngxPermissionsOnly]="['DeanOffice']">
+                <div class="col-2">
+                    <a [routerLink]="['/major-groups/operation']" class="btn btn-primary btn-icon text-white me-2 mb-3">
+                        <span>
+                            <i class="fe fe-plus"></i>
+                        </span> Add Major Group
+                    </a>
+                </div>
+            </ng-template>
         </div>
         <div class="card-body">
             <div class="row">
@@ -48,23 +50,24 @@
                         {{value?.join(',')}}
                     </ng-template>
                 </ngx-datatable-column>
-
-                <ngx-datatable-column prop="id" [width]="120">
-                    <ng-template ngx-datatable-header-template>
-                        Actions
-                    </ng-template>
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                        <div class="row">
-                            <div class="col">
-                                <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i
-                                        ngbTooltip="Edit" class="fa fa-edit"></i> </a>
+                <ng-template [ngxPermissionsOnly]="['DeanOffice']">
+                    <ngx-datatable-column prop="id" [width]="120">
+                        <ng-template ngx-datatable-header-template>
+                            Actions
+                        </ng-template>
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                            <div class="row">
+                                <div class="col">
+                                    <a [routerLink]="['operation',value]" routerLinkActive="router-link-active"> <i
+                                            ngbTooltip="Edit" class="fa fa-edit"></i> </a>
+                                </div>
+                                <div class="col" (click)="deleteMajorGroup(value)">
+                                    <i ngbTooltip="Delete" class="fa fa-trash danger-icon"></i>
+                                </div>
                             </div>
-                            <div class="col" (click)="deleteMajorGroup(value)">
-                                <i ngbTooltip="Delete" class="fa fa-trash danger-icon"></i>
-                            </div>
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ng-template>
             </ngx-datatable>
         </div>
     </div>

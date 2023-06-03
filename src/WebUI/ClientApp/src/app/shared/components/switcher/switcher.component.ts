@@ -63,10 +63,10 @@ export class SwitcherComponent implements OnInit, AfterViewInit {
     sessionStorage.clear();
     let html: any = document.querySelector('html');
     let body = document.querySelector('body');
-    
+
     let styleId = document.querySelector('#style');
     let lightBtn = document.getElementById('myonoffswitch6') as HTMLInputElement;
-    let ltr = document.querySelector('#myonoffswitch4')  as HTMLInputElement;
+    let ltr = document.querySelector('#myonoffswitch4') as HTMLInputElement;
     let vertical = document.querySelector('#myonoffswitch1') as HTMLInputElement;
     let mainContent = document.querySelector('.main-content');
     let mainContainer = document.querySelectorAll('.main-container');
@@ -99,35 +99,35 @@ export class SwitcherComponent implements OnInit, AfterViewInit {
     let primaryColorVal = getComputedStyle(document.documentElement).getPropertyValue('--primary-bg-color').trim();
     document.querySelector('html')?.style.setProperty('--primary-bg-color', primaryColorVal);
     // horizontal to vertical
-      //add
-      body?.classList.add('sidebar-mini');
-      mainContent?.classList.add('app-content');
-      mainContainer.forEach((e,i)=>{
-        e?.classList.add('container-fluid');
-      })
-      header?.classList.add('app-header');
-      //remove
-      body?.classList.remove('horizontal');
-      body?.classList.remove('horizontal-hover');
-      mainContent?.classList.remove('hor-content');
-      mainContainer.forEach((e,i)=>{
-        e?.classList.remove('container');
-      })
-      header?.classList.remove('hor-header');
-      appSidebar?.classList.remove('horizontal-main');
-      mainSidemenu?.classList.remove('container');
+    //add
+    body?.classList.add('sidebar-mini');
+    mainContent?.classList.add('app-content');
+    mainContainer.forEach((e, i) => {
+      e?.classList.add('container-fluid');
+    })
+    header?.classList.add('app-header');
+    //remove
+    body?.classList.remove('horizontal');
+    body?.classList.remove('horizontal-hover');
+    mainContent?.classList.remove('hor-content');
+    mainContainer.forEach((e, i) => {
+      e?.classList.remove('container');
+    })
+    header?.classList.remove('hor-header');
+    appSidebar?.classList.remove('horizontal-main');
+    mainSidemenu?.classList.remove('container');
 
-      document.querySelector('.slide-left')?.classList.add('d-none');
-      document.querySelector('.slide-right')?.classList.add('d-none');
+    document.querySelector('.slide-left')?.classList.add('d-none');
+    document.querySelector('.slide-right')?.classList.add('d-none');
 
 
     // rtl to ltr
-      body?.classList.add('ltr');
-      html?.setAttribute('dir', 'ltr');
-      styleId?.setAttribute( 'href', './assets/bootstrap/bootstrap.css');
-      //remove
-      body?.classList.remove('rtl');
-      checkHoriMenu();
+    body?.classList.add('ltr');
+    html?.setAttribute('dir', 'ltr');
+    styleId?.setAttribute('href', './assets/bootstrap/bootstrap.css');
+    //remove
+    body?.classList.remove('rtl');
+    checkHoriMenu();
 
     vertical.checked = true;
     lightBtn.checked = true;
@@ -372,6 +372,7 @@ export class SwitcherComponent implements OnInit, AfterViewInit {
   }
 
   bgImage(e: any) {
+    debugger;
     let transparent = document.getElementById(
       'myonoffswitchTransparent'
     ) as HTMLInputElement;

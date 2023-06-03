@@ -1,4 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthorizeService } from '@authorize/authorize.service';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -7,10 +10,18 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit {
+  public isAuthenticated?: Observable<boolean>;
 
-  constructor() { }
+  public userName?: Observable<string | null | undefined>;
+
+  constructor(private authorizeService: AuthorizeService, private _router: Router) { }
 
   ngOnInit() {
+    this.isAuthenticated = this.authorizeService.isAuthenticated();
+    this.userName = this.authorizeService.getUser().pipe(map(u => u && u.name));
+
+    localStorage.setItem('reloaded', "false");
   }
+
 
 }

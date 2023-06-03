@@ -42,6 +42,8 @@ public class GetMaterialsQueryHandler : IRequestHandler<GetMaterialsQuery, Pagin
             case "VolunteerStudent":
             case "DisabilityStudent":
                 return await GetStudentMaterials(request, cancellationToken);
+            case "DeanOffice":
+                return await GetAllMaterials(request, cancellationToken);
         }
 
         return new PaginatedList<MaterialDto>(new List<MaterialDto>(), 0, 1, 10);
@@ -91,5 +93,23 @@ public class GetMaterialsQueryHandler : IRequestHandler<GetMaterialsQuery, Pagin
            }).PaginatedListAsync(request.PageNumber, request.PageSize);
 
     }
+    private async Task<PaginatedList<MaterialDto>> GetAllMaterials(GetMaterialsQuery request, CancellationToken cancellationToken)
+    {
+        return await _context.Materials.Where(m => m.MaterialStatus != MaterialStatus.Rejected)
+           .Select(m => new MaterialDto
+           {
+               Id = m.Id,
+               ContentType = m.ContentType,
+               CourseId = m.CourseId,
+               Description = m.Description,
+               MaterialStatus = m.MaterialStatus.ToString(),
+               Name = m.Name,
+               Path = m.Path,
+               RequestId = m.RequestId,
+               VolunteerStudentId = m.VolunteerStudentId,
+               CourseName = m.Course.Name
 
+           }).PaginatedListAsync(request.PageNumber, request.PageSize);
+
+    }
 }

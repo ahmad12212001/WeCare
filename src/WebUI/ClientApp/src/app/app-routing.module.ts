@@ -8,6 +8,8 @@ import { FullContentComponent } from './shared/components/layouts/full-content/f
 
 
 export const routes: Routes = [
+  { path: '', loadChildren: () => import('../app/pages/home/home.module').then(m => m.HomeModule) },
+  { path: 'home', loadChildren: () => import('../app/pages/home/home.module').then(m => m.HomeModule) },
   {
     path: '', component: FullContentComponent, canActivate: [AuthorizeGuard], children: [
       {
@@ -42,11 +44,13 @@ export const routes: Routes = [
         path: 'users',
         loadChildren: () => import('../app/pages/dean-office-pages/users/users.module').then(m => m.UsersModule)
       },
-      { path: '', redirectTo: 'exams', pathMatch: 'full' }
+      { path: 'landing-page', loadChildren: () => import('../app/pages/landing-page/landing-page.module').then(m => m.LandingPageModule) },
+      { path: '', redirectTo: 'landing-page', pathMatch: 'full' }
     ]
   }
   ,
-  { path: 'home', loadChildren: () => import('../app/pages/home/home.module').then(m => m.HomeModule) },
+
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '', component: ErrorStyleComponent, children: error_content }
 ];
 
